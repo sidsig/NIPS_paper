@@ -2,6 +2,10 @@
 \usepackage{nips14submit_e,times}
 \usepackage{hyperref}
 \usepackage{url}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
 %\documentstyle[nips14submit_09,times,art10]{article} % For LaTeX 2.09
 
 
@@ -58,397 +62,60 @@ Address \\
 \maketitle
 
 \begin{abstract}
-We propose a tractable probabilistic model for generating complex high dimensional sequences. This model combines a powerful real-valued distribution estimator with a Recurrent Neural Network (RNN) for capturing temporal dependencies in complex, high-dimensional data. Unlike other models in this family, computing probabilities for sequences and sampling from these models is tractable and simple. Therefore the model can be used in combination with other sequential models and not just for generating sequences. We demonstrate the advantages of the model by comparing it on two standard tasks. The 
+We propose a tractable probabilistic model for generating complex high dimensional sequences. This model combines a powerful distribution estimator, the Real-Valued Neural Autoregressive Distribution Estimator (RNADE) with a Recurrent Neural Network (RNN) for capturing temporal dependencies in high-dimensional data. Maximum likelihood learning can be applied to efficiently train the model using a gradient based optimiser. Unlike other models in this family, log-likelihoods for sequences can be computed exactly and efficiently. We evaluate the model's performance on two standard datasets and compare its performance to other models. 
 \end{abstract}
 
 \section{Introduction}
 
-Recently various neural based models have been proposed for learning modelling high dimensional sequential data. These models have been shown to work much better than standard models such as HMMs and Linear Dynamical Systems. These models include the TRBM, the RTRBM and the RNN-RBM. Although these models work very well for complex high dimensional data, they have several limitations. They cannot be trained exactly because their gradients can't be computed. Also obtaining probabilities from the model is not tractable and often very expensive. These models also suffer from the fact, that the distribution estimators they use are meant for binary data. Even though these models can be extended to model real-value with some approximations, these models are known to have several short-comings. The RNN-NADE is a tractable alternative, however it is unsatisfactory, because the NADE can only model distributions over high-dimensional binary vectors. In this paper we propose a tractable distribution estimator for high-dimensional real-valued sequences by making use of the RNADE which was proposed recently. The proposed model can be trained and sampled from efficiently by back-propagating error gradients through the computational graph. A key advantage of this model over other neural-based sequence models is that getting the likelihoods of the occurrence of sequences is tractable and fast. Because of this, the model can be easily combined with other sequence models and is applicable to various tasks like sequence completion, sequence denoising and classification of complex real-valued sequences. We compare our model's performance to the earlier models and demonstrate its many benefits. 
+Modeling sequences is a fundamental problem in machine learning. Many popular models like Hidden Markov Models (HMMs) and Linear Dynamical Systems use latent variables to capture temporal properties of sequential model. However HMMs employ a 1-of-K state representation for the hidden state and trying to model larger histories can lead to exponentially large hidden states. RNNs are an interesting alternative for modeling sequential data and have recently been employed in speech recognition, MIR and various other tasks. RNNs employ a deterministic distributed hidden representation that can in theory capture temporal properties over very long time scales. However RNNs are limited by the effectiveness of gradient based optimisers and the size of the output space that they can model. To rectify this issue, a family of models that condition complex distribution estimators on the hidden state of an RNN have been proposed. The first such model was the RTRBM and it was later extended by the RNN-RBM and the RNN-NADE \cite{Boulanger-Lewandowski2012}. 
+
+The main idea behind this family of models is to use complex distribution estimators like the RBM and the NADE and incorporate a temporal element by conditioning the parameters of the model at each time step on previously observed parts of the sequence. As mentioned before an RNN can in theory learn dependencies over large time-scales within the data and is used in these models for conditioning the distributions at each step. RNN based models are also attractive because the recurrent parts of the model can be easily trained by using BPTT or Hessian Free (HF) optimisation. The RTRBM and the RNN-NADE models cannot be trained exactly by maximum likelihood learning because the gradients of the RBMs cannot be computed exactly. This problem was rectified by using a NADE instead of an RBM. However, this family of temporal models is not very well suited to modeling real-valued data. Both the RBM and the NADE estimate distributions over binary spaces. Although the RBM can be used on real data by either scaling the data between $[0,1]$ or by using the Gaussian-Bernouilli RBM (gRBM), we feel that using an estimator meant for real data could provide further gains. 
+
+In this paper, we propose a model called the RNN-RNADE that combines the temporal modeling properties of the RNN with the recently proposed RNADE model. The RNADE is a generalisation of the NADE to real-valued data. It has been shown to outperform gaussian mixture models (GMMS) and many other distribution estimators on a variety of datasets of varying dimensionality and complexity. In this paper we explore how the RNADE can be combined with the RNN to yield a temporal generative model. We show how the model can be trained efficient using maximum likelihood learning using gradient based optimisers. Finally we evaluate the performance  
+
+%Recently various neural based models have been proposed for learning modelling high dimensional sequential data. These models have been shown to work much better than standard models such as HMMs and Linear Dynamical Systems. These models include the TRBM, the RTRBM and the RNN-RBM. Although these models work very well for complex high dimensional data, they have several limitations. They cannot be trained exactly because their gradients can't be computed. Also obtaining probabilities from the model is not tractable and often very expensive. These models also suffer from the fact, that the distribution estimators they use are meant for binary data. Even though these models can be extended to model real-value with some approximations, these models are known to have several short-comings. The RNN-NADE is a tractable alternative, however it is unsatisfactory, because the NADE can only model distributions over high-dimensional binary vectors. In this paper we propose a tractable distribution estimator for high-dimensional real-valued sequences by making use of the RNADE which was proposed recently. The proposed model can be trained and sampled from efficiently by back-propagating error gradients through the computational graph. A key advantage of this model over other neural-based sequence models is that getting the likelihoods of the occurrence of sequences is tractable and fast. Because of this, the model can be easily combined with other sequence models and is applicable to various tasks like sequence completion, sequence denoising and classification of complex real-valued sequences. We compare our model's performance to the earlier models and demonstrate its many benefits. 
+ 
 
 
-NIPS requires electronic submissions.  The electronic submission site is  
-\begin{center}
-   \url{http://papers.nips.cc}
-\end{center}
-
-Please read carefully the
-instructions below, and follow them faithfully.
-\subsection{Style}
-
-Papers to be submitted to NIPS 2014 must be prepared according to the
-instructions presented here. Papers may be only up to eight pages long,
-including figures. Since 2009 an additional ninth page \textit{containing only
-cited references} is allowed. Papers that exceed nine pages will not be
-reviewed, or in any other way considered for presentation at the conference.
-%This is a strict upper bound. 
-
-Please note that this year we have introduced automatic line number generation
-into the style file (for \LaTeXe and Word versions). This is to help reviewers
-refer to specific lines of the paper when they make their comments. Please do
-NOT refer to these line numbers in your paper as they will be removed from the
-style file for the final version of accepted papers.
-
-The margins in 2014 are the same as since 2007, which allow for $\approx 15\%$
-more words in the paper compared to earlier years. We are also again using 
-double-blind reviewing. Both of these require the use of new style files.
-
-Authors are required to use the NIPS \LaTeX{} style files obtainable at the
-NIPS website as indicated below. Please make sure you use the current files and
-not previous versions. Tweaking the style files may be grounds for rejection.
-
-%% \subsection{Double-blind reviewing}
-
-%% This year we are doing double-blind reviewing: the reviewers will not know 
-%% who the authors of the paper are. For submission, the NIPS style file will 
-%% automatically anonymize the author list at the beginning of the paper.
-
-%% Please write your paper in such a way to preserve anonymity. Refer to
-%% previous work by the author(s) in the third person, rather than first
-%% person. Do not provide Web links to supporting material at an identifiable
-%% web site.
-
-%%\subsection{Electronic submission}
-%%
-%% \textbf{THE SUBMISSION DEADLINE IS MAY 31st, 2014. SUBMISSIONS MUST BE LOGGED BY
-%% 23:00, MAY 31st, 2014, UNIVERSAL TIME}
-
-%% You must enter your submission in the electronic submission form available at
-%% the NIPS website listed above. You will be asked to enter paper title, name of
-%% all authors, keyword(s), and data about the contact
-%% author (name, full address, telephone, fax, and email). You will need to
-%% upload an electronic (postscript or pdf) version of your paper.
-
-%% You can upload more than one version of your paper, until the
-%% submission deadline. We strongly recommended uploading your paper in
-%% advance of the deadline, so you can avoid last-minute server congestion.
-%%
-%% Note that your submission is only valid if you get an e-mail
-%% confirmation from the server. If you do not get such an e-mail, please
-%% try uploading again. 
-
-
-\subsection{Retrieval of style files}
-
-The style files for NIPS and other conference information are available on the World Wide Web at
-\begin{center}
-   \url{http://www.nips.cc/}
-\end{center}
-The file \verb+nips2014.pdf+ contains these 
-instructions and illustrates the
-various formatting requirements your NIPS paper must satisfy. \LaTeX{}
-users can choose between two style files:
-\verb+nips11submit_09.sty+ (to be used with \LaTeX{} version 2.09) and
-\verb+nips11submit_e.sty+ (to be used with \LaTeX{}2e). The file
-\verb+nips2014.tex+ may be used as a ``shell'' for writing your paper. All you
-have to do is replace the author, title, abstract, and text of the paper with
-your own. The file
-\verb+nips2014.rtf+ is provided as a shell for MS Word users.
-
-The formatting instructions contained in these style files are summarized in
-sections \ref{gen_inst}, \ref{headings}, and \ref{others} below.
-
-%% \subsection{Keywords for paper submission}
-%% Your NIPS paper can be submitted with any of the following keywords (more than one keyword is possible for each paper):
-
-%% \begin{verbatim}
-%% Bioinformatics
-%% Biological Vision
-%% Brain Imaging and Brain Computer Interfacing
-%% Clustering
-%% Cognitive Science
-%% Control and Reinforcement Learning
-%% Dimensionality Reduction and Manifolds
-%% Feature Selection
-%% Gaussian Processes
-%% Graphical Models
-%% Hardware Technologies
-%% Kernels
-%% Learning Theory
-%% Machine Vision
-%% Margins and Boosting
-%% Neural Networks
-%% Neuroscience
-%% Other Algorithms and Architectures
-%% Other Applications
-%% Semi-supervised Learning
-%% Speech and Signal Processing
-%% Text and Language Applications
-
-%% \end{verbatim}
-
-\section{General formatting instructions}
+\section{The RNADE}
 \label{gen_inst}
 
-The text must be confined within a rectangle 5.5~inches (33~picas) wide and
-9~inches (54~picas) long. The left margin is 1.5~inch (9~picas).
-Use 10~point type with a vertical spacing of 11~points. Times New Roman is the
-preferred typeface throughout. Paragraphs are separated by 1/2~line space,
-with no indentation.
+The RNADE is a generalisation of the NADE to real-valued data. Like the NADE, the RNADE expresses the joint probability of the data, as a product of one-dimensional conditional distributions as follows:
+$$ p(x) = \prod_{d=1}^{D} p(x_d|\mathbf{x_{<d}}) \: \text{with} \: p(x_d|\mathbf{x_{<d}}) = p_{\mathcal{M}(x_d|\theta_d)} $$ where $p_{\mathcal{M}}$ is a mixture of Gaussians and $\boldsymbol{x}_{<d}$ is a vector of all the dimensions of the data point $<d$. The RNADE models each of the conditional distributions by means of a feed-forward neural network with tied weights, with one neural network for each dimension. The activations of the hidden units are calculated as follows:
 
-Paper title is 17~point, initial caps/lower case, bold, centered between
-2~horizontal rules. Top rule is 4~points thick and bottom rule is 1~point
-thick. Allow 1/4~inch space above and below title to rules. All pages should
-start at 1~inch (6~picas) from the top of the page.
-
-%The version of the paper submitted for review should have ``Anonymous Author(s)'' as the author of the paper.
-
-For the final version, authors' names are
-set in boldface, and each name is centered above the corresponding
-address. The lead author's name is to be listed first (left-most), and
-the co-authors' names (if different address) are set to follow. If
-there is only one co-author, list both author and co-author side by side.
-
-Please pay special attention to the instructions in section \ref{others}
-regarding figures, tables, acknowledgments, and references.
-
-\section{Headings: first level}
-\label{headings}
-
-First level headings are lower case (except for first word and proper nouns),
-flush left, bold and in point size 12. One line space before the first level
-heading and 1/2~line space after the first level heading.
-
-\subsection{Headings: second level}
-
-Second level headings are lower case (except for first word and proper nouns),
-flush left, bold and in point size 10. One line space before the second level
-heading and 1/2~line space after the second level heading.
-
-\subsubsection{Headings: third level}
-
-Third level headings are lower case (except for first word and proper nouns),
-flush left, bold and in point size 10. One line space before the third level
-heading and 1/2~line space after the third level heading.
-
-\section{Citations, figures, tables, references}
-\label{others}
-
-These instructions apply to everyone, regardless of the formatter being used.
-
-\subsection{Citations within the text}
-
-Citations within the text should be numbered consecutively. The corresponding
-number is to appear enclosed in square brackets, such as [1] or [2]-[5]. The
-corresponding references are to be listed in the same order at the end of the
-paper, in the \textbf{References} section. (Note: the standard
-\textsc{Bib\TeX} style \texttt{unsrt} produces this.) As to the format of the
-references themselves, any style is acceptable as long as it is used
-consistently.
-
-As submission is double blind, refer to your own published work in the 
-third person. That is, use ``In the previous work of Jones et al.\ [4]'',
-not ``In our previous work [4]''. If you cite your other papers that
-are not widely available (e.g.\ a journal paper under review), use
-anonymous author names in the citation, e.g.\ an author of the
-form ``A.\ Anonymous''. 
+$$ \mathbf{a}_d = \boldsymbol{W}_{.,<d}\boldsymbol{x}_d + \mathbf{c}$$
+$$ \boldsymbol{h}_d = \sigma (\rho_d \mathbf{a}_d)$$
 
 
-\subsection{Footnotes}
+where $\mathbf{c} \in \mathbb{R}^{H}$ and $\boldsymbol{W} \in \mathbb{R}^{D \times (H-1)}$ are neural network parameters that are shared across all the neural networks and $\sigma(x) = 1/(1+e^{-x})$ is the sigmoid function. $\boldsymbol{W}_{.,<d}$ represents the first $D-1$ columns of the shared weight matrix. The term $\rho_d$ is a scaling factor which is also learnt from the data. The scaling factor was introduced in \cite{AISTATS2011_Bengio11} in order to prevent the sigmoid hidden units from saturating. The computation of the activations of the hidden units can be made more efficient by performing the computation as:
+$$ \mathbf{a}_1 = \mathbf{c}, \: \: \; \mathbf{a}_{d+1} = \mathbf{a}_{d} + x_d \mathbf{W}_{.,d}$$
 
-Indicate footnotes with a number\footnote{Sample of the first footnote} in the
-text. Place the footnotes at the bottom of the page on which they appear.
-Precede the footnote with a horizontal rule of 2~inches
-(12~picas).\footnote{Sample of the second footnote}
+ Unlike the NADE which models each output as a bernouilli distribution, the outputs of each of the feed forward neural networks of the RNADE are mixtures of Gaussians. Therefore the RNADE comprises of $D$ mixture density networks with tied input-to-hidden weights. Once the hidden units of the RNADE have been computed, they are used to compute the parameters of the GMMs $\boldsymbol{\theta}_d  = \left\{ \boldsymbol{\alpha}_d, \boldsymbol{\mu}_d, \boldsymbol{\sigma}_d \right\}$ at each output, where $\boldsymbol{\alpha}_d$ are the mixing coefficients, $\boldsymbol{\mu}_d$ are the means and $\boldsymbol{\sigma}_d$ are the variances. These parameters are computed as follows:
+$$ \boldsymbol{\alpha}_d = \text{softmax} ({\mathbf{V}_{d}^{\alpha}}^T \mathbf{h}_d + \mathbf{b}^{\alpha}_{d})$$
+$$ \boldsymbol{\mu}_d = {\mathbf{V}_{d}^{\mu}}^T \mathbf{h}_d + \mathbf{b}^{\mu}_{d}$$
+$$ \boldsymbol{\sigma}_d = \exp ({\mathbf{V}_{d}^{\sigma}}^T \mathbf{h}_d + \mathbf{b}^{\sigma}_{d})$$
 
-\subsection{Figures}
+where $ \mathbf{V}_{d}^{\alpha},\mathbf{V}_{d}^{\mu},\mathbf{V}_{d}^{\sigma}$ are $H \times K$ matrices , $\mathbf{b}^{\alpha}_{d},\mathbf{b}^{\mu}_{d},\mathbf{b}^{\sigma}_{d}$ are vectors of size $K$ and $K$ is the number of components in the GMM. The parameters of the RNADE can be learnt by performing gradient ascent on the log-likelihood of the training set. 
 
-All artwork must be neat, clean, and legible. Lines should be dark
-enough for purposes of reproduction; art work should not be
-hand-drawn. The figure number and caption always appear after the
-figure. Place one line space before the figure caption, and one line
-space after the figure. The figure caption is lower case (except for
-first word and proper nouns); figures are numbered consecutively.
+\section{RNN-based Models for Sequences}
 
-Make sure the figure caption does not get separated from the figure.
-Leave sufficient space to avoid splitting the figure and figure caption.
+An RNN can define a distribution over sequences $\mathbf{x}_1^{T}$ if the loss function is of the form $ L = \sum_{t} -\log p(\mathbf{x}^{t+1};\boldsymbol{\theta}^{t})$ where $p(.;\boldsymbol{\theta})$ is a distribution with parameters $\boldsymbol{\theta}$, and $\boldsymbol{\theta}^t \equiv f(\mathbf{x}_1^t)$. In more detail, according to figure 1, let the hidden state of the RNN at time $t$ be give by:
+$$ \mathbf{h}_{RNN}^t = \sigma(\mathbf{W}_{in}\mathbf{x}^t + \mathbf{W}_{rec}\mathbf{h}_{RNN}^{t-1} + \mathbf{b}_{RNN})$$
+Let the hidden state of the RNN at time $t-1$ be used to output $\mathbf{z}^{t} = \sigma(\mathbf{W}_{out}\mathbf{h}_{RNN}^{t-1} + \mathbf{b}_{out})$ and let the parameters of the distribution at time $t$, $\boldsymbol{\theta}^t = f(\mathbf{z}^t,\boldsymbol{\theta}_{model})$ where $\boldsymbol{\theta}_{model}$ are the independent parameters of the distribution estimator and $f$ is some differentiable function with respect to the model parameters. If we can obtain the derivates of the cost function with respect to the parameters of the distribution $p(;|\boldsymbol{\theta})$, then it can be shown that the parameters of the RNN can be trained by using the chain rule and Back Propagation Through Time (BPTT). Therefore:
 
-You may use color figures. 
-However, it is best for the
-figure captions and the paper body to make sense if the paper is printed
-either in black/white or in color.
-\begin{figure}[h]
-\begin{center}
-%\framebox[4.0in]{$\;$}
-\fbox{\rule[-.5cm]{0cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
-\end{center}
-\caption{Sample figure caption.}
-\end{figure}
+$$ \frac {\partial L}{\partial{\theta^t}} = -\frac {\partial p(\mathbf{x}^t)}{\partial \theta^t}$$
+$$ \frac {\partial L}{\partial{\theta_{model}}} = \sum_{t} -\frac {\partial p(\mathbf{x}^t)}{\partial{\theta_{model}}}   $$
 
-\subsection{Tables}
+$$ \frac {\partial L}{\partial{\mathbf{z}^t}} = \sum_{T} \sum_{i} -\frac {\partial p(\mathbf{x}^t)}{\partial{\theta^i}} \frac {\partial f(\mathbf{z}^t,\boldsymbol{\theta}_{model})^i}{\partial{\mathbf{z}^t}}  $$
 
-All tables must be centered, neat, clean and legible. Do not use hand-drawn
-tables. The table number and title always appear before the table. See
-Table~\ref{sample-table}.
+Once we obtain all the errors with respect to the outputs of the RNN, the gradients with respect to the RNN parameters can be easily found by applying the chain rule further and backpropagating the gradients back in time. We show the calculations for the proposed model in section 3. Further derivations of the results can be found in the supplementary material. 
 
-Place one line space before the table title, one line space after the table
-title, and one line space after the table. The table title must be lower case
-(except for first word and proper nouns); tables are numbered consecutively.
+The RTRBM \cite{Sutskever2008} was the first model that uses the above idea to condition RBMs on the outputs of an RNN. However, the model is constrained by the fact that the outputs of RNN are responsible for both the density estimation and for propagating temporal information to the following time step. The RNN-RBM \cite{Boulanger-Lewandowski2012} generalises the RTRBM model by introducing a separate hidden layer for the RNN. Decoupling the states of the RNN and conditional RBMs led to an improvement in performance. 
 
-\begin{table}[t]
-\caption{Sample table title}
-\label{sample-table}
-\begin{center}
-\begin{tabular}{ll}
-\multicolumn{1}{c}{\bf PART}  &\multicolumn{1}{c}{\bf DESCRIPTION}
-\\ \hline \\
-Dendrite         &Input terminal \\
-Axon             &Output terminal \\
-Soma             &Cell body (contains cell nucleus) \\
-\end{tabular}
-\end{center}
-\end{table}
-
-\section{Final instructions}
-Do not change any aspects of the formatting parameters in the style files.
-In particular, do not modify the width or length of the rectangle the text
-should fit into, and do not change font sizes (except perhaps in the
-\textbf{References} section; see below). Please note that pages should be
-numbered.
-
-\section{Preparing PostScript or PDF files}
-
-Please prepare PostScript or PDF files with paper size ``US Letter'', and
-not, for example, ``A4''. The -t
-letter option on dvips will produce US Letter files.
-
-Fonts were the main cause of problems in the past years. Your PDF file must
-only contain Type 1 or Embedded TrueType fonts. Here are a few instructions
-to achieve this.
-
-\begin{itemize}
-
-\item You can check which fonts a PDF files uses.  In Acrobat Reader,
-select the menu Files$>$Document Properties$>$Fonts and select Show All Fonts. You can
-also use the program \verb+pdffonts+ which comes with \verb+xpdf+ and is
-available out-of-the-box on most Linux machines.
-
-\item The IEEE has recommendations for generating PDF files whose fonts
-are also acceptable for NIPS. Please see
-\url{http://www.emfield.org/icuwb2010/downloads/IEEE-PDF-SpecV32.pdf}
-
-\item LaTeX users:
-
-\begin{itemize}
-
-\item Consider directly generating PDF files using \verb+pdflatex+
-(especially if you are a MiKTeX user). 
-PDF figures must be substituted for EPS figures, however.
-
-\item Otherwise, please generate your PostScript and PDF files with the following commands:
-\begin{verbatim} 
-dvips mypaper.dvi -t letter -Ppdf -G0 -o mypaper.ps
-ps2pdf mypaper.ps mypaper.pdf
-\end{verbatim}
-
-Check that the PDF files only contains Type 1 fonts. 
-%For the final version, please send us both the Postscript file and
-%the PDF file. 
-
-\item xfig "patterned" shapes are implemented with 
-bitmap fonts.  Use "solid" shapes instead. 
-\item The \verb+\bbold+ package almost always uses bitmap
-fonts.  You can try the equivalent AMS Fonts with command
-\begin{verbatim}
-\usepackage[psamsfonts]{amssymb}
-\end{verbatim}
- or use the following workaround for reals, natural and complex: 
-\begin{verbatim}
-\newcommand{\RR}{I\!\!R} %real numbers
-\newcommand{\Nat}{I\!\!N} %natural numbers 
-\newcommand{\CC}{I\!\!\!\!C} %complex numbers
-\end{verbatim}
-
-\item Sometimes the problematic fonts are used in figures
-included in LaTeX files. The ghostscript program \verb+eps2eps+ is the simplest
-way to clean such figures. For black and white figures, slightly better
-results can be achieved with program \verb+potrace+.
-\end{itemize}
-\item MSWord and Windows users (via PDF file):
-\begin{itemize}
-\item Install the Microsoft Save as PDF Office 2007 Add-in from
-\url{http://www.microsoft.com/downloads/details.aspx?displaylang=en\&familyid=4d951911-3e7e-4ae6-b059-a2e79ed87041}
-\item Select ``Save or Publish to PDF'' from the Office or File menu
-\end{itemize}
-\item MSWord and Mac OS X users (via PDF file):
-\begin{itemize}
-\item From the print menu, click the PDF drop-down box, and select ``Save
-as PDF...''
-\end{itemize}
-\item MSWord and Windows users (via PS file):
-\begin{itemize}
-\item To create a new printer
-on your computer, install the AdobePS printer driver and the Adobe Distiller PPD file from
-\url{http://www.adobe.com/support/downloads/detail.jsp?ftpID=204} {\it Note:} You must reboot your PC after installing the
-AdobePS driver for it to take effect.
-\item To produce the ps file, select ``Print'' from the MS app, choose
-the installed AdobePS printer, click on ``Properties'', click on ``Advanced.''
-\item Set ``TrueType Font'' to be ``Download as Softfont''
-\item Open the ``PostScript Options'' folder
-\item Select ``PostScript Output Option'' to be ``Optimize for Portability''
-\item Select ``TrueType Font Download Option'' to be ``Outline''
-\item Select ``Send PostScript Error Handler'' to be ``No''
-\item Click ``OK'' three times, print your file.
-\item Now, use Adobe Acrobat Distiller or ps2pdf to create a PDF file from
-the PS file. In Acrobat, check the option ``Embed all fonts'' if
-applicable.
-\end{itemize}
-
-\end{itemize}
-If your file contains Type 3 fonts or non embedded TrueType fonts, we will
-ask you to fix it. 
-
-\subsection{Margins in LaTeX}
- 
-Most of the margin problems come from figures positioned by hand using
-\verb+\special+ or other commands. We suggest using the command
-\verb+\includegraphics+
-from the graphicx package. Always specify the figure width as a multiple of
-the line width as in the example below using .eps graphics
-\begin{verbatim}
-   \usepackage[dvips]{graphicx} ... 
-   \includegraphics[width=0.8\linewidth]{myfile.eps} 
-\end{verbatim}
-or % Apr 2009 addition
-\begin{verbatim}
-   \usepackage[pdftex]{graphicx} ... 
-   \includegraphics[width=0.8\linewidth]{myfile.pdf} 
-\end{verbatim}
-for .pdf graphics. 
-See section 4.4 in the graphics bundle documentation (\url{http://www.ctan.org/tex-archive/macros/latex/required/graphics/grfguide.ps}) 
- 
-A number of width problems arise when LaTeX cannot properly hyphenate a
-line. Please give LaTeX hyphenation hints using the \verb+\-+ command.
+The RNN-RBM model cannot be trained exactly because the error derivatives with respect to the parameters of the conditional RBMs are approximated using Contrastive Divergence (CD). Another drawback of the RNN-RBM model is that obtaining the log-likelihood of the sequence is intractable. This is because the RBM defines a joint distribution over the observed and hidden variables. Obtaining probabilities over the observed variables implies a summation over an exponential number of hidden states. These shortcomings can be addressed by replacing the RBM with the NADE, which is a tractable distribution estimator with performance comparable to RBMs. The log-likelihood can be easily calculated and more powerful gradient based optimisers like HF \cite{Martens2011} can be applied because the gradients are exactly calculable. 
 
 
-\subsubsection*{Acknowledgments}
 
-Use unnumbered third level headings for the acknowledgments. All
-acknowledgments go at the end of the paper. Do not include 
-acknowledgments in the anonymized submission, only in the 
-final paper. 
-
-\subsubsection*{References}
-
-References follow the acknowledgments. Use unnumbered third level heading for
-the references. Any choice of citation style is acceptable as long as you are
-consistent. It is permissible to reduce the font size to `small' (9-point) 
-when listing the references. {\bf Remember that this year you can use
-a ninth page as long as it contains \emph{only} cited references.}
-
-\small{
-[1] Alexander, J.A. \& Mozer, M.C. (1995) Template-based algorithms
-for connectionist rule extraction. In G. Tesauro, D. S. Touretzky
-and T.K. Leen (eds.), {\it Advances in Neural Information Processing
-Systems 7}, pp. 609-616. Cambridge, MA: MIT Press.
-
-[2] Bower, J.M. \& Beeman, D. (1995) {\it The Book of GENESIS: Exploring
-Realistic Neural Models with the GEneral NEural SImulation System.}
-New York: TELOS/Springer-Verlag.
-
-[3] Hasselmo, M.E., Schnell, E. \& Barkai, E. (1995) Dynamics of learning
-and recall at excitatory recurrent synapses and cholinergic modulation
-in rat hippocampal region CA3. {\it Journal of Neuroscience}
-{\bf 15}(7):5249-5262.
-}
-
+\bibliography{bibliography}
+\bibliographystyle{plain}
 \end{document}

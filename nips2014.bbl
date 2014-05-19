@@ -1,0 +1,30 @@
+\begin{thebibliography}{1}
+
+\bibitem{AISTATS2011_Bengio11}
+Yoshua Bengio.
+\newblock Discussion of "the neural autoregressive distribution estimator".
+\newblock In Geoffrey~J. Gordon and David~B. Dunson, editors, {\em Proceedings
+  of the Fourteenth International Conference on Artificial Intelligence and
+  Statistics (AISTATS-11)}, volume~15, pages 38--39. Journal of Machine
+  Learning Research - Workshop and Conference Proceedings, 2011.
+
+\bibitem{Boulanger-Lewandowski2012}
+N.~Boulanger-Lewandowski, Y.~Bengio, and P.~Vincent.
+\newblock Modeling temporal dependencies in high-dimensional sequences:
+  Application to polyphonic music generation and transcription.
+\newblock In {\em 29th International Conference on Machine Learning},
+  Edinburgh, Scotland, UK, 2012.
+
+\bibitem{Martens2011}
+James Martens and Ilya Sutskever.
+\newblock Learning recurrent neural networks with hessian-free optimization.
+\newblock In {\em Proceedings of the 28th International Conference on Machine
+  Learning (ICML-11)}, pages 1033--1040, 2011.
+
+\bibitem{Sutskever2008}
+Ilya Sutskever, Geoffrey~E Hinton, and Graham~W Taylor.
+\newblock The recurrent temporal restricted boltzmann machine.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages
+  1601--1608, 2008.
+
+\end{thebibliography}
