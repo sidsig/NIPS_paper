@@ -1,12 +1,17 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{AISTATS2011_Bengio11}
 Yoshua Bengio.
-\newblock Discussion of "the neural autoregressive distribution estimator".
+\newblock Discussion of ``{The Neural Autoregressive Distribution Estimator}".
 \newblock In Geoffrey~J. Gordon and David~B. Dunson, editors, {\em Proceedings
   of the Fourteenth International Conference on Artificial Intelligence and
   Statistics (AISTATS-11)}, volume~15, pages 38--39. Journal of Machine
   Learning Research - Workshop and Conference Proceedings, 2011.
+
+\bibitem{bengio2012advances}
+Yoshua Bengio, Nicolas Boulanger-Lewandowski, and Razvan Pascanu.
+\newblock Advances in optimizing recurrent networks.
+\newblock 2012.
 
 \bibitem{Boulanger-Lewandowski2012}
 N.~Boulanger-Lewandowski, Y.~Bengio, and P.~Vincent.
@@ -15,16 +20,48 @@ N.~Boulanger-Lewandowski, Y.~Bengio, and P.~Vincent.
 \newblock In {\em 29th International Conference on Machine Learning},
   Edinburgh, Scotland, UK, 2012.
 
+\bibitem{boulangerphone}
+Nicolas Boulanger-Lewandowski, Jasha Droppo, Mike Seltzer, and Dong Yu.
+\newblock Phone sequence modeling with recurrent neural networks.
+\newblock In {\em Proceedings of the 2014 IEEE International Conference on
+  Acoustics, Speech, and Signal Processing (ICASSP 2014), Florence, Italy}, May
+  2014.
+
 \bibitem{Martens2011}
 James Martens and Ilya Sutskever.
 \newblock Learning recurrent neural networks with hessian-free optimization.
 \newblock In {\em Proceedings of the 28th International Conference on Machine
   Learning (ICML-11)}, pages 1033--1040, 2011.
 
+\bibitem{mikolov2011empirical}
+Tomas Mikolov, Anoop Deoras, Stefan Kombrink, Lukas Burget, and Jan
+  Cernock{\`y}.
+\newblock Empirical evaluation and combination of advanced language modeling
+  techniques.
+\newblock In {\em INTERSPEECH}, pages 605--608, 2011.
+
+\bibitem{rumelhart1985learning}
+David~E Rumelhart, Geoffrey~E Hinton, and Ronald~J Williams.
+\newblock Learning internal representations by error propagation.
+\newblock Technical report, DTIC Document, 1985.
+
+\bibitem{sutskever2007learning}
+Ilya Sutskever and Geoffrey~E Hinton.
+\newblock Learning multilevel distributed representations for high-dimensional
+  sequences.
+\newblock In {\em International Conference on Artificial Intelligence and
+  Statistics}, pages 548--555, 2007.
+
 \bibitem{Sutskever2008}
 Ilya Sutskever, Geoffrey~E Hinton, and Graham~W Taylor.
 \newblock The recurrent temporal restricted boltzmann machine.
 \newblock In {\em Advances in Neural Information Processing Systems}, pages
   1601--1608, 2008.
+
+\bibitem{Uria2013}
+Benigno Uria, Iain Murray, and Hugo Larochelle.
+\newblock Rnade: The real-valued neural autoregressive density-estimator.
+\newblock In {\em Advances in Neural Information Processing Systems 26}, pages
+  2175--2183. 2013.
 
 \end{thebibliography}

@@ -1,46 +1,48 @@
-This is BibTeX, Version 0.99d (TeX Live 2011)
-Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+This is BibTeX, Version 0.99c (Web2C 7.5.6)
 The top-level auxiliary file: nips2014.aux
 The style file: plain.bst
 Database file #1: bibliography.bib
-You've used 4 entries,
+Warning--empty journal in bengio2012advances
+Warning--empty publisher in Uria2013
+You've used 10 entries,
             2118 wiz_defined-function locations,
-            527 strings with 5059 characters,
-and the built_in function-call counts, 1771 in all, are:
-= -- 177
-> -- 64
-< -- 4
-+ -- 25
-- -- 20
-* -- 104
-:= -- 261
-add.period$ -- 13
-call.type$ -- 4
-change.case$ -- 21
+            558 strings with 6242 characters,
+and the built_in function-call counts, 4173 in all, are:
+= -- 412
+> -- 182
+< -- 7
++ -- 71
+- -- 60
+* -- 256
+:= -- 635
+add.period$ -- 32
+call.type$ -- 10
+change.case$ -- 60
 chr.to.int$ -- 0
-cite$ -- 4
-duplicate$ -- 85
-empty$ -- 154
-format.name$ -- 20
-if$ -- 406
+cite$ -- 12
+duplicate$ -- 189
+empty$ -- 340
+format.name$ -- 60
+if$ -- 930
 int.to.chr$ -- 0
-int.to.str$ -- 4
-missing$ -- 4
-newline$ -- 23
-num.names$ -- 10
-pop$ -- 32
+int.to.str$ -- 10
+missing$ -- 9
+newline$ -- 53
+num.names$ -- 22
+pop$ -- 85
 preamble$ -- 1
-purify$ -- 17
+purify$ -- 49
 quote$ -- 0
-skip$ -- 70
+skip$ -- 150
 stack$ -- 0
-substring$ -- 121
-swap$ -- 37
-text.length$ -- 4
+substring$ -- 255
+swap$ -- 73
+text.length$ -- 7
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 16
-warning$ -- 0
-while$ -- 17
-width$ -- 5
-write$ -- 48
+type$ -- 40
+warning$ -- 2
+while$ -- 38
+width$ -- 12
+write$ -- 111
+(There were 2 warnings)
