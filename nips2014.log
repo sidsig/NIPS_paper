@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.30)  4 JUN 2014 18:13
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.30)  4 JUN 2014 21:57
 entering extended mode
  %&-line parsing enabled.
 **nips2014.tex
@@ -241,7 +241,11 @@ Package caption Info: float package v1.3 (or newer) detected on input line 275.
 
 Package caption Info: hyperref package v6.74m (or newer) detected on input line
  304.
-) (./nips2014.aux)
+) (./nips2014.aux
+
+LaTeX Warning: Label `fig:rnn-rnade' multiply defined.
+
+)
 \openout1 = `nips2014.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 62.
@@ -259,8 +263,7 @@ LaTeX Font Info:    ... okay on input line 62.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 62.
 LaTeX Font Info:    ... okay on input line 62.
 LaTeX Font Info:    Try loading font information for OT1+ptm on input line 62.
-
-(/usr/share/texmf/tex/latex/psnfss/ot1ptm.fd
+ (/usr/share/texmf/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 ABD: EveryShipout initializing macros
@@ -334,54 +337,69 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 67.
  [1{/usr/share/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
-] <RNN.pdf, id=69, 348.30125pt x 112.42pt>
+] <RNN.pdf, id=85, 348.30125pt x 112.42pt>
 File: RNN.pdf Graphic file (type pdf)
  <use RNN.pdf>
+
+LaTeX Warning: Reference `fig:rnn' on page 2 undefined on input line 126.
+
 [2pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
 has been already used, duplicate ignored
 
 \@EveryShipout@Output ...@Org@Shipout \box \@cclv 
                                                   
 l.130 
-       <./RNN.pdf>] <RNN-RNADE.pdf, id=124, 607.26875pt x 201.75375pt>
-File: RNN-RNADE.pdf Graphic file (type pdf)
+       <./RNN.pdf>] <RNADE.pdf, id=138, 183.68625pt x 274.02374pt>
+File: RNADE.pdf Graphic file (type pdf)
 
-<use RNN-RNADE.pdf> [3] [4pdfTeX warning (ext4): destination with the same iden
-tifier (name{figure.2}) has been already used, duplicate ignored
+<use RNADE.pdf> [3pdfTeX warning (ext4): destination with the same identifier (
+name{figure.2}) has been already used, duplicate ignored
 
 \@EveryShipout@Output ...@Org@Shipout \box \@cclv 
                                                   
-l.200 \end{equation}
-                     <./RNN-RNADE.pdf>]
-Missing character: There is no ï in font ptmr7t!
-Missing character: There is no ¿ in font ptmr7t!
-Missing character: There is no ½ in font ptmr7t!
- [5] (./nips2014.bbl [6]) [7]
-(./nips2014.aux) ) 
+l.153 
+       <./RNADE.pdf>] <RNN-RNADE.pdf, id=178, 607.26875pt x 201.75375pt>
+File: RNN-RNADE.pdf Graphic file (type pdf)
+
+<use RNN-RNADE.pdf> [4pdfTeX warning (ext4): destination with the same identifi
+er (name{figure.3}) has been already used, duplicate ignored
+
+\@EveryShipout@Output ...@Org@Shipout \box \@cclv 
+                                                  
+l.194 \subsection
+                 {Learning in the RNN-RNADE} <./RNN-RNADE.pdf>] [5] [6]
+(./nips2014.bbl [7]) [8] (./nips2014.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
 Here is how much of TeX's memory you used:
- 4734 strings out of 256216
- 65320 string characters out of 1917072
+ 4751 strings out of 256216
+ 65531 string characters out of 1917072
  132113 words of memory out of 1500000
- 7893 multiletter control sequences out of 10000+200000
+ 7903 multiletter control sequences out of 10000+200000
  20434 words of font info for 49 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
- 35i,9n,38p,1718b,385s stack positions out of 5000i,500n,6000p,200000b,15000s
-{/usr/share/texmf/fonts/enc/dvips/base/8r.enc}</usr/share/tex
-mf/fonts/type1/bluesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/c
-mbx7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmex10.pfb></usr/share/texmf/
-fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi
-5.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi7.pfb></usr/share/texmf/font
-s/type1/bluesky/cm/cmmib10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr10.p
-fb></usr/share/texmf/fonts/type1/bluesky/cm/cmr7.pfb></usr/share/texmf/fonts/ty
-pe1/bluesky/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy7.pfb></
-usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/b
-luesky/ams/msbm10.pfb></usr/share/texmf/fonts/type1/urw/courier/ucrr8a.pfb></us
-r/share/texmf/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf/fonts/type1
-/urw/times/utmb8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmr8a.pfb></usr/
-share/texmf/fonts/type1/urw/times/utmri8a.pfb>
-Output written on nips2014.pdf (7 pages, 433700 bytes).
+ 35i,8n,38p,1718b,387s stack positions out of 5000i,500n,6000p,200000b,15000s
+{/usr/share/texmf/fonts/enc/dvips/base/8r.enc}</usr/share/texmf/fonts/type1/b
+luesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmbx7.pfb></usr/s
+hare/texmf/fonts/type1/bluesky/cm/cmex10.pfb></usr/share/texmf/fonts/type1/blue
+sky/cm/cmmi10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi5.pfb></usr/shar
+e/texmf/fonts/type1/bluesky/cm/cmmi7.pfb></usr/share/texmf/fonts/type1/bluesky/
+cm/cmmib10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/t
+exmf/fonts/type1/bluesky/cm/cmr7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/c
+msy10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy7.pfb></usr/share/texmf/
+fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/msbm1
+0.pfb></usr/share/texmf/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf/fo
+nts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmb8
+a.pfb></usr/share/texmf/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf/font
+s/type1/urw/times/utmri8a.pfb>
+Output written on nips2014.pdf (8 pages, 581572 bytes).
 PDF statistics:
- 290 PDF objects out of 1000 (max. 8388607)
- 42 named destinations out of 1000 (max. 131072)
- 99 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 339 PDF objects out of 1000 (max. 8388607)
+ 48 named destinations out of 1000 (max. 131072)
+ 136 words of extra memory for PDF output out of 10000 (max. 10000000)
 
