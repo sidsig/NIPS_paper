@@ -196,13 +196,13 @@ The gradients of the conditionals $P(\mathbf{x}^t;\theta^t)$ with respect to the
 From Equation \ref{cost}, $\frac{\partial L}{\partial \mathbf{b}^{\alpha}_{t}} = \frac{\partial (-P(\mathbf{x}^t;\theta^t))}{\partial \mathbf{b}^{\alpha}_{t}}$ which can be easily obtained as shown in \cite{Uria2013}. The derivatives of the cost with respect to the other time-dependent parameters can be obtained in a similar manner. Once we obtain $ \frac{\partial L}{\partial \mathbf{b}^{\alpha}_{t}}, \frac{\partial L}{\partial \mathbf{b}^{\mu}_{t}}, \frac{\partial L}{\partial \mathbf{b}^{\sigma}_{t}}$, the gradients with respect to the other model parameters can be calculated as follows:
 
 \begin{equation}
-\frac{\partial L}{\partial W_{\alpha}} = \sum_{t=1}^T \frac{\partial L}{\partial \mathbf{b}^{\alpha}_{t}} \mathbf{h}^{t-1}
+\frac{\partial L}{\partial W_{\alpha}} = \sum_{t=1}^T \frac{\partial L}{\partial \mathbf{b}^{\alpha}_{t}} {\mathbf{h}^{t-1}}^{T}
 \end{equation}
 \begin{equation}
-\frac{\partial L}{\partial W_{\mu}} = \sum_{t=1}^T \frac{\partial L}{\partial \mathbf{b}^{\mu}_{t}} \mathbf{h}^{t-1}
+\frac{\partial L}{\partial W_{\mu}} = \sum_{t=1}^T \frac{\partial L}{\partial \mathbf{b}^{\mu}_{t}} {\mathbf{h}^{t-1}}^{T}
 \end{equation}
 \begin{equation}
-\frac{\partial L}{\partial W_{\sigma}} = \sum_{t=1}^T \frac{\partial L}{\partial \mathbf{b}^{\sigma}_{t}} \mathbf{h}^{t-1}
+\frac{\partial L}{\partial W_{\sigma}} = \sum_{t=1}^T \frac{\partial L}{\partial \mathbf{b}^{\sigma}_{t}} {\mathbf{h}^{t-1}}^{T}
 \end{equation}
 
 Using equations \ref{rnn-hidden},\ref{one},\ref{two},\ref{three}:
@@ -215,10 +215,10 @@ Using equations \ref{rnn-hidden},\ref{one},\ref{two},\ref{three}:
 Using equation \ref{grad-hidden}, the gradients with respect to the remaining model parameters can be calculated easily. 
 
 $$ \frac{\partial L}{\partial \mathbf{b}_{h}} =  \sum_{t=1}^{T} \frac{\partial L}{\partial \mathbf{h}^t} \mathbf{h}^t (1 - \mathbf{h}^t)$$
-$$ \frac{\partial L}{\partial W_{rec}} = \sum_{t=1}^{T} \frac{\partial L}{\partial \mathbf{h}^t} \mathbf{h}^t (1 - \mathbf{h}^t) \mathbf{h}^{t-1}$$
-$$ \frac{\partial L}{\partial W_{in}} = \sum_{t=1}^{T} \frac{\partial L}{\partial \mathbf{h}^t} \mathbf{h}^t (1 - \mathbf{h}^t) \mathbf{x}^{t}$$
+$$ \frac{\partial L}{\partial W_{rec}} = \sum_{t=1}^{T} \frac{\partial L}{\partial \mathbf{h}^t} \mathbf{h}^t (1 - \mathbf{h}^t) {\mathbf{h}^{t-1}}^T$$
+$$ \frac{\partial L}{\partial W_{in}} = \sum_{t=1}^{T} \frac{\partial L}{\partial \mathbf{h}^t} \mathbf{h}^t (1 - \mathbf{h}^t) {\mathbf{x}^{t}}^T$$
 
-As shown above, the gradients of the cost function can be calculated and used to train the entire model. In our implementation of the model, we used the automatic differentiation library Theano \cite{bergstra+al:2010-scipy} instead of calculating the gradients by hand. In the supplementary material, we show detailed calculations for the gradient calculations. Unlike the RNN-RBM, the gradients of the RNN-RNADE model can be calculated exactly. Therefore model training can benefit from the use of more powerful gradient based optimiser like the Hessian Free optimiser \cite{Martens2011}
+As shown above, the gradients of the cost function can be calculated and used to train the joint model. In our implementation of the model, we used the automatic differentiation library Theano \cite{bergstra+al:2010-scipy} instead of calculating the gradients by hand. In the supplementary material, we show detailed calculations for the gradient calculations. Unlike the RNN-RBM, the gradients of the RNN-RNADE model can be calculated exactly. Therefore model training can benefit from the use of more powerful gradient based optimiser like the Hessian Free optimiser \cite{Martens2011}
 
 \section{Experiments}
 \label{Experiments}
