@@ -2,3 +2,8 @@
 \BOOKMARK [1][-]{section.2}{Recurrent Neural Networks as generative models}{}
 \BOOKMARK [1][-]{section.3}{The RNADE}{}
 \BOOKMARK [1][-]{section.4}{RNN-RNADE}{}
+\BOOKMARK [2][-]{subsection.4.1}{Learning in the RNN-RNADE}{section.4}
+\BOOKMARK [1][-]{section.5}{Experiments}{}
+\BOOKMARK [2][-]{subsection.5.1}{2d stochastic trajectory}{section.5}
+\BOOKMARK [2][-]{subsection.5.2}{Motion capture data}{section.5}
+\BOOKMARK [2][-]{subsection.5.3}{Videos of bouncing balls}{section.5}

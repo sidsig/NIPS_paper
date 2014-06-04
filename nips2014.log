@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.30)  3 JUN 2014 21:50
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.30)  4 JUN 2014 15:22
 entering extended mode
  %&-line parsing enabled.
 **nips2014.tex
@@ -204,24 +204,48 @@ Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
 \ALG@tmplength=\skip48
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
-) (./nips2014.aux)
+) (/usr/share/texmf/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/graphics.sty
+Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/share/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 90.
+
+(/usr/share/texmf/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2007/01/08 v0.04d Graphics/color for pdfTeX
+\Gread@gobject=\count120
+))
+\Gin@req@height=\dimen118
+\Gin@req@width=\dimen119
+) (./nips2014.aux
+
+LaTeX Warning: Label `fig:rnn' multiply defined.
+
+)
 \openout1 = `nips2014.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 59.
-LaTeX Font Info:    ... okay on input line 59.
-LaTeX Font Info:    Try loading font information for OT1+ptm on input line 59.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 61.
+LaTeX Font Info:    ... okay on input line 61.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 61.
  (/usr/share/texmf/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
@@ -233,12 +257,8 @@ Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
 File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package color Info: Driver file: pdftex.def on input line 130.
-
-(/usr/share/texmf/tex/latex/pdftex-def/pdftex.def
-File: pdftex.def 2007/01/08 v0.04d Graphics/color for pdfTeX
-\Gread@gobject=\count120
-))
-Package hyperref Info: Link coloring OFF on input line 59.
+)
+Package hyperref Info: Link coloring OFF on input line 61.
 
 (/usr/share/texmf/tex/latex/hyperref/nameref.sty
 Package: nameref 2006/12/27 v2.28 Cross-referencing by name of section
@@ -248,60 +268,86 @@ Package: refcount 2006/02/20 v3.0 Data extraction from references (HO)
 )
 \c@section@level=\count121
 )
-LaTeX Info: Redefining \ref on input line 59.
-LaTeX Info: Redefining \pageref on input line 59.
+LaTeX Info: Redefining \ref on input line 61.
+LaTeX Info: Redefining \pageref on input line 61.
  (./nips2014.out)
 (./nips2014.out)
 \@outlinefile=\write3
 \openout3 = `nips2014.out'.
 
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17.28> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 63.
-LaTeX Font Info:    Try loading font information for U+msa on input line 63.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 65.
+LaTeX Font Info:    Try loading font information for U+msa on input line 65.
  (/usr/share/texmf/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2002/01/19 v2.2g AMS font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 63.
+LaTeX Font Info:    Try loading font information for U+msb on input line 65.
 
 (/usr/share/texmf/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 63.
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 63.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 65.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 65.
 
 (/usr/share/texmf/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 64.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 66.
  [1{/usr/share/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
-] [2] (./nips2014.bbl [3]) [4] (./nips2014.aux) ) 
+] <RNN.png, id=70, 347.8596pt x 112.2594pt>
+File: RNN.png Graphic file (type png)
+
+<use RNN.png> [2pdfTeX warning (ext4): destination with the same identifier (na
+me{figure.1}) has been already used, duplicate ignored
+
+\@EveryShipout@Output ...@Org@Shipout \box \@cclv 
+                                                  
+l.127 
+       <./RNN.png>] <RNN_RNADE.png, id=93, 605.6226pt x 203.3196pt>
+File: RNN_RNADE.png Graphic file (type png)
+
+<use RNN_RNADE.png> [3] [4pdfTeX warning (ext4): destination with the same iden
+tifier (name{figure.2}) has been already used, duplicate ignored
+
+\@EveryShipout@Output ...@Org@Shipout \box \@cclv 
+                                                  
+l.200 \end{equation}
+                     <./RNN_RNADE.png>]
+Missing character: There is no ï in font ptmr7t!
+Missing character: There is no ¿ in font ptmr7t!
+Missing character: There is no ½ in font ptmr7t!
+ [5] (./nips2014.bbl [6]) [7]
+(./nips2014.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
 Here is how much of TeX's memory you used:
- 4058 strings out of 256216
- 53942 string characters out of 1917072
- 114759 words of memory out of 1500000
- 7266 multiletter control sequences out of 10000+200000
+ 4263 strings out of 256216
+ 56519 string characters out of 1917072
+ 118705 words of memory out of 1500000
+ 7438 multiletter control sequences out of 10000+200000
  20434 words of font info for 49 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
- 30i,9n,36p,1718b,387s stack positions out of 5000i,500n,6000p,200000b,15000s
-{/usr/share/texmf/fonts/enc/dv
-ips/base/8r.enc}</usr/share/texmf/fonts/type1/bluesky/cm/cmbx10.pfb></usr/share
-/texmf/fonts/type1/bluesky/cm/cmbx7.pfb></usr/share/texmf/fonts/type1/bluesky/c
-m/cmex10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/te
-xmf/fonts/type1/bluesky/cm/cmmi5.pfb></usr/share/texmf/fonts/type1/bluesky/cm/c
-mmi7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmib10.pfb></usr/share/texmf
-/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr7
-.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf/font
-s/type1/bluesky/cm/cmsy7.pfb></usr/share/texmf/fonts/type1/bluesky/ams/msbm10.p
-fb></usr/share/texmf/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf/fonts
-/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmb8a.p
-fb></usr/share/texmf/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf/fonts/t
-ype1/urw/times/utmri8a.pfb>
-Output written on nips2014.pdf (4 pages, 129471 bytes).
+ 30i,9n,36p,1718b,389s stack positions out of 5000i,500n,6000p,200000b,15000s
+{/usr/share/texmf/fonts/enc/dvips/base/8r.enc}</usr/share/texmf/fonts/type1/b
+luesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmbx7.pfb></usr/s
+hare/texmf/fonts/type1/bluesky/cm/cmex10.pfb></usr/share/texmf/fonts/type1/blue
+sky/cm/cmmi10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi5.pfb></usr/shar
+e/texmf/fonts/type1/bluesky/cm/cmmi7.pfb></usr/share/texmf/fonts/type1/bluesky/
+cm/cmmib10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/t
+exmf/fonts/type1/bluesky/cm/cmr7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/c
+msy10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy7.pfb></usr/share/texmf/
+fonts/type1/bluesky/ams/msbm10.pfb></usr/share/texmf/fonts/type1/urw/courier/uc
+rr8a.pfb></usr/share/texmf/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texm
+f/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmr
+8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmri8a.pfb>
+Output written on nips2014.pdf (7 pages, 185332 bytes).
 PDF statistics:
- 144 PDF objects out of 1000 (max. 8388607)
- 20 named destinations out of 1000 (max. 131072)
- 49 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 215 PDF objects out of 1000 (max. 8388607)
+ 39 named destinations out of 1000 (max. 131072)
+ 99 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -13,6 +13,15 @@ Yoshua Bengio, Nicolas Boulanger-Lewandowski, and Razvan Pascanu.
 \newblock Advances in optimizing recurrent networks.
 \newblock 2012.
 
+\bibitem{bergstra+al:2010-scipy}
+James Bergstra, Olivier Breuleux, Fr{\'{e}}d{\'{e}}ric Bastien, Pascal Lamblin,
+  Razvan Pascanu, Guillaume Desjardins, Joseph Turian, David Warde-Farley, and
+  Yoshua Bengio.
+\newblock Theano: a {CPU} and {GPU} math expression compiler.
+\newblock In {\em Proceedings of the Python for Scientific Computing Conference
+  ({SciPy})}, June 2010.
+\newblock Oral Presentation.
+
 \bibitem{Boulanger-Lewandowski2012}
 N.~Boulanger-Lewandowski, Y.~Bengio, and P.~Vincent.
 \newblock Modeling temporal dependencies in high-dimensional sequences:

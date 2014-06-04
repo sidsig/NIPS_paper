@@ -6,10 +6,12 @@
 \usepackage{amssymb}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
+\usepackage{graphicx}
 %\documentstyle[nips14submit_09,times,art10]{article} % For LaTeX 2.09
 
+\DeclareMathOperator{\rvec}{rvec}
 
-\title{A Tractable Model for Generating High-Dimensional Sequences}
+\title{A Tractable Model for High-Dimensional Real Sequences}
 
 
 \author{
@@ -62,7 +64,7 @@ Address \\
 \maketitle
 
 \begin{abstract}
-We propose a tractable probabilistic model for generating and modelling real-valued high dimensional sequences. This model combines a powerful distribution estimator, the Real-Valued Neural Autoregressive Distribution Estimator (RNADE) with a Recurrent Neural Network (RNN) for capturing temporal dependencies in the data. Maximum likelihood learning can be applied to efficiently train the model using a gradient based optimiser. Unlike other models in this family, log-likelihoods for sequences can be computed exactly and efficiently. We evaluate the model's performance on two standard datasets and compare its performance to other models. 
+We present a probabilistic model for generating and modelling real-valued high dimensional sequences. This model combines a powerful distribution estimator, the Real-Valued Neural Autoregressive Density Estimator (RNADE) with a Recurrent Neural Network (RNN) for capturing temporal dependencies in sequences of high dimensional data. Maximum likelihood learning can be applied to efficiently train the model using a gradient based optimiser. Unlike other models in this family, log-likelihoods for sequences can be computed exactly and efficiently. We evaluate the model's performance on standard datasets and compare its performance to other models. 
 \end{abstract}
 
 \section{Introduction}
@@ -100,12 +102,23 @@ Although the models described above have been successful in various tasks, they 
 
 % The RNN-RBM model cannot be trained exactly because the error derivatives with respect to the parameters of the conditional RBMs are approximated using Contrastive Divergence (CD). Another drawback of the RNN-RBM model is that obtaining the log-likelihood of the sequence is intractable. This is because the RBM defines a joint distribution over the observed and hidden variables. Obtaining probabilities over the observed variables implies a summation over an exponential number of hidden states. These shortcomings can be addressed by replacing the RBM with the NADE, which is a tractable distribution estimator with performance comparable to RBMs. The log-likelihood can be easily calculated and more powerful gradient based optimisers like HF \cite{Martens2011} can be applied because the gradients are exactly calculable. 
 
+\begin{figure}
+	\centering
+    \includegraphics[scale=0.8]{RNN.png}
+    \caption{Awesome RNN}
+    \label{fig:rnn}
+\end{figure}
+
+
 An RNN defines a distribution over an output sequence $ \mathbf{x} \equiv \left\{ \mathbf{x}^t \in \mathbb{R}^n, t \leq T \right\}$ in the following manner:
 $$ P(\mathbf{x}) = \prod_{t=1}^{T} P(\mathbf{x}^t|\mathcal{A}^t)$$
 where $\mathcal{A}^t \equiv \left\{ \mathbf{x}^{\tau}|\tau < t \right\}$ is the history of the input sequence $\mathbf{x}$ so far, $P(\mathbf{x}^t|\mathcal{A}^t)$ is probability of observing observing $\mathbf{x}^t$ conditioned on the history of the sequence $\mathcal{A}^t$ at time $t$. RNN based generative models with different properties and capacities can be constructed by carefully choosing the form and parameterization of the conditional $P(\mathbf{x}^t|\mathcal{A}^t)$ as discussed in this section. 
 
 In an RNN with a single hidden layer, the hidden layer state at time $t$ is given by:
-$$ \mathbf{h}^t = \sigma{(W_{in}\mathbf{x}^t + W_{rec}\mathbf{h}^{t-1} + \mathbf{b}_h)}$$
+\begin{equation}
+\label{rnn-hidden}
+\mathbf{h}^t = \sigma{(W_{in}\mathbf{x}^t + W_{rec}\mathbf{h}^{t-1} + \mathbf{b}_h)}
+\end{equation}
 where $W_{in}$ is the weight matrix from the input to the hidden layer, $W_{rec}$ is the weight matrix from the previous hidden state to the current state and $\mathbf{b}_h$ is the bias vector for the hidden layer. In a standard RNN, the next time step $\mathbf{x}^{t+1}$ is predicted as:
 $$ \mathbf{x}^{t+1} = \sigma{(W_{out}\mathbf{h}^{t} + \mathbf{b}_{out})}$$  
 where $W_{out}$ connects the hidden layer to the output layer and $\mathbf{b}_{out}$ is the bias. As shown in Figure 1, there can be optional connections between the input and the output and the output and the hidden layers for temporal smoothing. However as mentioned earlier, each of the outputs is unimodal and independent of the other outputs. These assumptions are not true for many types of data and RNNs that can predict high-dimensional multi-model conditional distributions are necessary. This can be achieved by letting the hidden layer of the RNN predict some of the parameters of a distribution estimator instead of predicting the outputs directly. 
@@ -126,24 +139,103 @@ where $\mathbf{c} \in \mathbb{R}^{H}$ and $\boldsymbol{W} \in \mathbb{R}^{D \tim
 $$ \mathbf{a}_1 = \mathbf{c}, \: \: \; \mathbf{a}_{d+1} = \mathbf{a}_{d} + x_d \mathbf{W}_{.,d}$$
 
  Unlike the NADE which models each output as a bernouilli distribution, the outputs of each of the feed forward neural networks of the RNADE are mixtures of Gaussians. Therefore the RNADE comprises of $D$ mixture density networks with tied input-to-hidden weights. Once the hidden units of the RNADE have been computed, they are used to compute the parameters of the GMMs $\boldsymbol{\theta}_d  = \left\{ \boldsymbol{\alpha}_d, \boldsymbol{\mu}_d, \boldsymbol{\sigma}_d \right\}$ at each output, where $\boldsymbol{\alpha}_d$ are the mixing coefficients, $\boldsymbol{\mu}_d$ are the means and $\boldsymbol{\sigma}_d$ are the variances. These parameters are computed as follows:
+
 $$ \boldsymbol{\alpha}_d = \text{softmax} ({\mathbf{V}_{d}^{\alpha}}^T \mathbf{h}_d + \mathbf{b}^{\alpha}_{d})$$
 $$ \boldsymbol{\mu}_d = {\mathbf{V}_{d}^{\mu}}^T \mathbf{h}_d + \mathbf{b}^{\mu}_{d}$$
 $$ \boldsymbol{\sigma}_d = \exp ({\mathbf{V}_{d}^{\sigma}}^T \mathbf{h}_d + \mathbf{b}^{\sigma}_{d})$$
 
-where $ \mathbf{V}_{d}^{\alpha},\mathbf{V}_{d}^{\mu},\mathbf{V}_{d}^{\sigma}$ are $H \times K$ matrices , $\mathbf{b}^{\alpha}_{d},\mathbf{b}^{\mu}_{d},\mathbf{b}^{\sigma}_{d}$ are vectors of size $K$ and $K$ is the number of components in the GMM. The parameters of the RNADE can be learnt by performing gradient ascent on the log-likelihood of the training set. 
+where $ \mathbf{V}_{d}^{\alpha},\mathbf{V}_{d}^{\mu},\mathbf{V}_{d}^{\sigma}$ are $H \times K$ matrices , $\mathbf{b}^{\alpha}_{d},\mathbf{b}^{\mu}_{d},\mathbf{b}^{\sigma}_{d}$ are vectors of size $K$ and $K$ is the number of components in the GMM. More concisely, the RNADE is parameterised by $\mathbf{V}^{\alpha},\mathbf{V}^{\mu},\mathbf{V}^{\sigma}$ which are $D \times H \times K$ matrices and $\mathbf{b}^{\alpha},\mathbf{b}^{\mu},\mathbf{b}^{\sigma}$ which are matrices of size $D \times K $.
+The parameters of the RNADE can be learnt by performing gradient ascent on the log-likelihood of the training set. 
 
 \section{RNN-RNADE}
 \label{RNN-RNADE}
 
+\begin{figure}
+	\centering
+    \includegraphics[scale=0.65]{RNN_RNADE.png}
+    \caption{Awesome RNN}
+    \label{fig:rnn}
+\end{figure}
+
+
 The RNN-RNADE is a sequence of conditional distributions for each time-step of a sequence $\mathbf{x}$. As mentioned earlier, the parameters of the conditional distributions at each time step $t$ are a function of the hidden state of the RNN at the previous time-step $t-1$. We first define the notation in order to simplify discussion of the training algorithm later in the section. 
 
-From section \ref{RNADE}, the RNADE is parameterised by $ \theta \equiv \left\{ \mathbf{V}_{d}^{\alpha},\mathbf{V}_{d}^{\mu},\mathbf{V}_{d}^{\sigma},\mathbf{b}^{\alpha}_{d},\mathbf{b}^{\mu}_{d},\mathbf{b}^{\sigma}_{d} \right\}$. Let  $ \theta^t \equiv \left\{ \mathbf{V}_{d}^{\alpha t},\mathbf{V}_{d}^{\mu t},\mathbf{V}_{d}^{\sigma t},\mathbf{b}^{\alpha t}_{d},\mathbf{b}^{\mu t}_{d},\mathbf{b}^{\sigma t}_{d} \right\}$ denote the parameters of the conditional RNADE at time $t$. Although all the parameters of the RNADE at time $t$ can be a function of the hidden state at $t-1$, we consider the matrices $ \mathbf{V}_{d}^{\alpha},\mathbf{V}_{d}^{\mu},\mathbf{V}_{d}^{\sigma}$ to be fixed at each time step and only consider the case where the biases $\mathbf{b}^{\alpha}_{d},\mathbf{b}^{\mu}_{d},\mathbf{b}^{\sigma}_{d}$ to be time-dependent through the RNN hidden state. Therefore, $ \theta^t \equiv \left\{ \mathbf{V}_{d}^{\alpha},\mathbf{V}_{d}^{\mu},\mathbf{V}_{d}^{\sigma},\mathbf{b}^{\alpha t}_{d},\mathbf{b}^{\mu t}_{d},\mathbf{b}^{\sigma t}_{d} \right\}$. As described later, we experiment with the architecture to ascertain which permutation of time dependent parameters $\mathbf{b}^{\alpha t}_{d},\mathbf{b}^{\mu t}_{d},\mathbf{b}^{\sigma t}_{d}$ gives the best results.  
+From section \ref{RNADE}, the RNADE is parameterised by $ \theta \equiv \left\{ \mathbf{V}^{\alpha},\mathbf{V}^{\mu},\mathbf{V}^{\sigma},\mathbf{b}^{\alpha},\mathbf{b}^{\mu},\mathbf{b}^{\sigma} \right\}$. Let  $ \theta_t \equiv \left\{ \mathbf{V}^{\alpha}_{t},\mathbf{V}^{\mu}_{t},\mathbf{V}^{\sigma}_{t},\mathbf{b}^{\alpha}_{t},\mathbf{b}^{\mu}_{t},\mathbf{b}^{\sigma}_{t} \right\}$ denote the parameters of the conditional RNADE at time $t$. Although all the parameters of the RNADE at time $t$ can be a function of the hidden state at $t-1$, we consider the matrices $ \mathbf{V}^{\alpha},\mathbf{V}^{\mu},\mathbf{V}^{\sigma}$ to be fixed at each time step and only consider the case where the biases $\mathbf{b}^{\alpha},\mathbf{b}^{\mu},\mathbf{b}^{\sigma}$ to be time-dependent through the RNN hidden state. Therefore, $ \theta_t \equiv \left\{ \mathbf{V}^{\alpha},\mathbf{V}^{\mu},\mathbf{V}^{\sigma},\mathbf{b}^{\alpha}_{t},\mathbf{b}^{\mu}_{t},\mathbf{b}^{\sigma}_{t} \right\}$. As described later, we experiment with the architecture to ascertain which permutation of time dependent parameters $\mathbf{b}^{\alpha}_{t},\mathbf{b}^{\mu}_{t},\mathbf{b}^{\sigma}_{t}$ gives the best results.  
 
 As illustrated by figure 2, the time-dependent RNADE parameters are give by:
-$$ {\mathrm{vec}(\mathbf{b}^{\alpha t}_{d})}^{T} = {\mathrm{vec}(\mathbf{b}^{\alpha}_{d})}^{T} + W_{\alpha}\mathbf{h}^{t-1}$$
-$$ {\mathrm{vec}(\mathbf{b}^{\mu t}_{d})}^T = {\mathrm{vec}(\mathbf{b}^{\mu}_{d})}^T + W_{\mu}\mathbf{h}^{t-1}$$
-$$ {\mathrm{vec}(\mathbf{b}^{\sigma t}_{d})}^T = {\mathrm{vec}(\mathbf{b}^{\sigma}_{d})}^T + W_{\sigma}\mathbf{h}^{t-1}$$
-where 
+\begin{equation}
+\label{one}
+\rvec(\mathbf{b}^{\alpha}_{t}) = \rvec(\mathbf{b}^{\alpha}) + W_{\alpha}\mathbf{h}^{t-1}
+\end{equation}
+\begin{equation}
+\label{two}
+\rvec(\mathbf{b}^{\mu}_{t}) = \rvec(\mathbf{b}^{\mu}) + W_{\mu}\mathbf{h}^{t-1}
+\end{equation}
+\begin{equation}
+\label{three}
+\rvec(\mathbf{b}^{\sigma}_{t}) = \rvec(\mathbf{b}^{\sigma}) + W_{\sigma}\mathbf{h}^{t-1}
+\end{equation}
+where $\rvec(A) = [a_{1,1}, ..., a_{1,n}, a_{2,1}, ..., a_{2,n}, ..., a_{m,1}, ..., a_{m,n}]$ for some $m \times n$ matrix $A$, $W_{\alpha},W_{\mu},W_{\sigma} \in \mathbb{R}^{r \times D c}$ are matrices from the hidden state of the RNN to the mixing coefficients, means and standard deviations of the RNADE respectively, $r$ is the number of hidden units in the RNN, $D$ is the dimensionality of the input vectors and $c$ is the number of components of each GMM in the RNADE. 
+
+Therefore using equations \ref{one},\ref{two},\ref{three} we can obtain the time-dependent biases for the RNADE at each time step. 
+
+\subsection{Learning in the RNN-RNADE}
+
+For training the RNN-RNADE, we minimise the negative log-likelihood cost of observing a sequence $\mathbf{x}$. The cost function is given by:
+
+\begin{align*}
+L(\theta) &= - \log P(\mathbf{x})\\
+&= -\sum_{t=1}^{T} \log P(\mathbf{x}^t;\theta^t)\\
+\end{align*}
+
+The gradients of the conditionals $P(\mathbf{x}^t;\theta^t)$ with respect to the parameters of the RNADE can be calculated, the details of which are outlined in \cite{Uria2013}. Once we obtain the gradients with respect to the time-dependent parameters, the entire network can be trained using BPTT. 
+
+Suppose we obtain $ \frac{\partial L}{\partial \mathbf{b}^{\alpha}_{t}}, \frac{\partial L}{\partial \mathbf{b}^{\mu}_{t}}, \frac{\partial L}{\partial \mathbf{b}^{\sigma}_{t}}$, then the gradients with respect to the other model parameters can be calculated as follows:
+
+\begin{equation}
+\frac{\partial L}{\partial W_{\alpha}} = \sum_{t=1}^T \frac{\partial L}{\partial \mathbf{b}^{\alpha}_{t}} \mathbf{h}^{t-1}
+\end{equation}
+\begin{equation}
+\frac{\partial L}{\partial W_{\mu}} = \sum_{t=1}^T \frac{\partial L}{\partial \mathbf{b}^{\mu}_{t}} \mathbf{h}^{t-1}
+\end{equation}
+\begin{equation}
+\frac{\partial L}{\partial W_{\sigma}} = \sum_{t=1}^T \frac{\partial L}{\partial \mathbf{b}^{\sigma}_{t}} \mathbf{h}^{t-1}
+\end{equation}
+
+Using equations \ref{rnn-hidden},\ref{one},\ref{two},\ref{three}:
+
+\begin{equation}
+\label{grad-hidden}
+\frac{\partial L}{\partial \mathbf{h}^t} = W_{rec}\frac{\partial L}{\partial \mathbf{h}^{t+1}} \mathbf{h}^{t+1} (1 - \mathbf{h}^{t+1}) + W_{\alpha} \frac{\partial L}{\partial \mathbf{b}^{\alpha}_{t+1}} + W_{\mu} \frac{\partial L}{\partial \mathbf{b}^{\mu}_{t+1}} + W_{\sigma} \frac{\partial L}{\partial \mathbf{b}^{\sigma}_{t+1}}
+\end{equation}
+
+Using equation \ref{grad-hidden}, the gradients with respect to the remaining model parameters can be calculated easily. 
+
+$$ \frac{\partial L}{\partial \mathbf{b}_{h}} =  \sum_{t=1}^{T} \frac{\partial L}{\partial \mathbf{h}^t} \mathbf{h}^t (1 - \mathbf{h}^t)$$
+$$ \frac{\partial L}{\partial W_{rec}} = \sum_{t=1}^{T} \frac{\partial L}{\partial \mathbf{h}^t} \mathbf{h}^t (1 - \mathbf{h}^t) \mathbf{h}^{t-1}$$
+$$ \frac{\partial L}{\partial W_{in}} = \sum_{t=1}^{T} \frac{\partial L}{\partial \mathbf{h}^t} \mathbf{h}^t (1 - \mathbf{h}^t) \mathbf{x}^{t}$$
+
+As shown above, the gradients of the cost function can be calculated and used to train the entire model. In our implementation of the model, we used the automatic differentiation library Theano \cite{bergstra+al:2010-scipy} instead of calculating the gradients by hand. In the supplementary material, we show detailed calculations for the gradient calculations. Unlike the RNN-RBM, the gradients of the RNN-RNADE model can be calculated exactly. Therefore model training can benefit from the use of more powerful gradient based optimiser like the Hessian Free optimiser \cite{Martens2011}
+
+\section{Experiments}
+\label{Experiments}
+The RNN-RNADE is tested on three tasks, a simple 2d trajectory, videos of bouncing balls and motion capture data. On all three tasks we report the log probabilities as well as the squared prediction error, allowing comparisons between our approach and the RTRBM and RNN-RBM in the latter two tasks. Code for experiments is available in the supplementary material.
+
+\subsection{2d stochastic trajectory}
+This task was used as a demonstrative example of the system. At each time step a particle�s [x,y] coordinates are determined by the system of equations:
+
+\(x = N(sin(t)+1,0.1)\)\\
+\(y = x .N(sin(t+0.5)+1,0.2)\)
+
+where t is the timestep. The model is trained on sequences of 100 consecutive timesteps. A model was trained consisting of an RNADE with 1 component per dimension and 20 hidden neurons per dimension, with the RNN employing 20 recurrent neurons. The squared prediction error per frame is 0.16. Videos of predictions of the next time frame, as well as sequence completion can be seen in the supplementary material. A limited grid search was performed to find hyperparameters such as number of hidden and recurrent neurons, 
+
+\subsection{Motion capture data}
+As in \cite{Sutskever2008} and \cite{Boulanger-Lewandowski2012} we use the motion capture dataset from \cite{Sutskever2008}, which consists of sequences of 50 frames, each containing 49 real-valued dimensions representing joint angles, translations and rotations of the base of the spine. Using an RNADE with 1 component per dimension and 200 hidden neurons per dimension and 200 recurrent neurons in the RNN, the RNN-RNADE produces a mean squared test error per frame of 2, substantially lower than 20.1 for RTRBM and 16.2 for the RNN-RBM as reported in \cite{Boulanger-Lewandowski2012}.
+
+\subsection{Videos of bouncing balls}
+The bouncing balls dataset consists of synthetic videos of three balls bouncing in a box, as described in \cite{Sutskever2008}. We use videos of 15x15 pixels (225 dimensions) and sequences of 128 frames. Each pixel is a real value in the range [0,1]. As the RNADE samples from a Gaussian distribution, it is possible for illegal values to be produced and so the output of the model is constrained to the minimum and maximum values of the data. Using an RNADE with 1 component per dimension and 200 hidden neurons per dimension and 200 recurrent neurons in the RNN, the RNN-RNADE achieves a squared test error per frame of 2.0, similar to the RTRBM but substantially higher than the RNN-RBM as reported in \cite{Boulanger-Lewandowski2012}. Videos of errors per frame and generated sequences can be found in the supplementary material.
+
+
 
 \bibliography{bibliography}
 \bibliographystyle{plain}
