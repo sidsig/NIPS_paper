@@ -7,6 +7,7 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage{graphicx}
+\usepackage[labelfont=bf]{caption}
 %\documentstyle[nips14submit_09,times,art10]{article} % For LaTeX 2.09
 
 \DeclareMathOperator{\rvec}{rvec}
@@ -64,18 +65,19 @@ Address \\
 \maketitle
 
 \begin{abstract}
-We present a probabilistic model for generating and modelling real-valued high dimensional sequences. This model combines a powerful distribution estimator, the Real-Valued Neural Autoregressive Density Estimator (RNADE) with a Recurrent Neural Network (RNN) for capturing temporal dependencies in sequences of high dimensional data. Maximum likelihood learning can be applied to efficiently train the model using a gradient based optimiser. Unlike other models in this family, log-likelihoods for sequences can be computed exactly and efficiently. We evaluate the model's performance on standard datasets and compare its performance to other models. 
+We present a probabilistic model for generating and modelling high dimensional real-valued sequences. This model combines a powerful distribution estimator, the Real-Valued Neural Autoregressive Density Estimator (RNADE) with a Recurrent Neural Network (RNN) for capturing temporal dependencies in sequences of high dimensional data. Maximum likelihood learning can be applied to efficiently train the model using a gradient based optimiser. Unlike other models in this family, log-likelihoods for sequences can be computed exactly and efficiently. We evaluate the model's performance on standard datasets and compare its performance to other models. 
 \end{abstract}
 
 \section{Introduction}
 \label{intro}
-Modeling sequences is a fundamental problem in machine learning. Speech, music, video and many other kinds of data are sequential in nature. A good sequential model can be used for discriminative tasks, for sequence completion, as a prior in more complex tasks, sequence denoising and various other applications. There are many existing models such as Linear Dynamical Systems and Hidden Markov Models (HMMs) that model sequential data. Although HMMs are widely used in speech recognition and a wide variety of other problems, they are limited by the exact form of their latent representation and become computationally infeasible for modelling long histories \cite{sutskever2007learning}. 
+Modeling sequences is a fundamental problem in machine learning. Speech, music, video and many other kinds of naturally occurring data are sequential in nature. A good sequential model can be used for discriminative tasks, for sequence completion, as a prior in more complex tasks, sequence denoising and various other applications. There are many existing models such as Linear Dynamical Systems and Hidden Markov Models (HMMs) that model sequential data. Although these models are used extensively in many fields such as speech, audio and music, they can only model a limited a history. Modelling long term dependencies between data points becomes intractable when using these models \cite{sutskever2007learning}. 
+%Although HMMs are widely used in speech recognition and a wide variety of other problems, they are limited by the exact form of their latent representation and become computationally infeasible for modelling long histories \cite{sutskever2007learning}. 
 
-Recurrent Neural Networks (RNNs) are simple and powerful models for sequential data. RNNs have an internal memory that allows them to model dependencies between observations occurring at different times. RNNs are completely general in their description in that in principle they can describe relationships between inputs separated by arbitrary lengths of time. However in practice, training RNNs using gradient based optimisers is not easy and their use in practical applications has been limited. Recently RNNs have received a lot of attention from the machine learning community and various problems that plagued gradient based training have been identified and some of them have been effectively remedied \cite{Martens2011,bengio2012advances}. RNNs have been shown to be very successful on several music and language applications \cite{mikolov2011empirical,Boulanger-Lewandowski2012,bengio2012advances}. 
+Recurrent Neural Networks (RNNs) are simple and powerful models for sequential data. RNNs have an internal memory that allows them to model dependencies between observations separated by a variable number of time steps. In principle RNNs can describe relationships between inputs separated by arbitrary lengths of time. However in practice, training RNNs using gradient based optimisers is not easy and their use in practical applications has been limited. After being ignored by machine learning researchers for a long time, there has been a resurgence of interest in RNNs over the last decade. There have been several key developments in understanding and solving some of the issues associated with gradient based training of RNNs \cite{Martens2011,bengio2012advances}. These advances have made it possible to train RNNs on various tasks and RNNs have been shown to be very successful on a variety of music and language applications \cite{mikolov2011empirical,Boulanger-Lewandowski2012,bengio2012advances}. 
 
-An RNN can be used to map an input sequence to an output sequence or it can be used as a generative model. Generative models try to extrapolate a finite number of training points to cover the entire space of inputs. In its simplest form, the RNN can predict unimodal outputs under the assumption that the output variables are independent. However for many problems this is not satisfactory. A more powerful RNN-based generative model can be constructed by letting the RNN predict the parameters of a powerful distribution estimator. By doing this, we can get complex high-dimensional distributions at each time-step conditioned on the previous inputs. This idea was first employed in the Recurrent Temporal Restricted Boltzmann Machine (RTRBM) \cite{Sutskever2008} model. The model was then extended by combining an RNN with a Neural Autoregressive Distribution Estimator (NADE) and the RBM via a more general architecture \cite{Boulanger-Lewandowski2012}. The RNN-RBM and the RNN-NADE have been successfully used for tasks in speech and music \cite{boulangerphone,Boulanger-Lewandowski2012}. 
+An RNN can either be used to map an input sequence to an output sequence or it can be used as a generative model. Generative models try to model the entire space of inputs given a finite number of training examples. In its simplest form, the RNN can predict unimodal outputs under the assumption that all the output variables are conditionally independent given the remaining outputs. However for many problems this is not satisfactory. A more powerful RNN-based generative model can be constructed by letting the RNN predict the parameters of a powerful distribution estimator. Employing this architecture we obtain complex high-dimensional distributions at each time-step conditioned on the previous inputs. This idea was first employed in the Recurrent Temporal Restricted Boltzmann Machine (RTRBM) \cite{Sutskever2008} model. The model was then extended by combining an RNN with a Neural Autoregressive Distribution Estimator (NADE) and the RBM via a more general architecture \cite{Boulanger-Lewandowski2012}. The RNN-RBM and the RNN-NADE have been successfully used for tasks in speech and music \cite{boulangerphone,Boulanger-Lewandowski2012}. 
 
-Although the models described above have been successful in various tasks, they are unsuitable for modelling real-valued data. Both the RBM and the NADE explicitly model binary vectors. The extension of the RBM for modelling real-valued data using either the mean-field approximation or using gaussian visible units is known to have several limitations \cite{boulangerphone}. In this paper, we present a new model for modelling real-valued sequential data by combining the RNN with the real-valued neural autoregressive density estimator (RNADE). The RNADE is a density estimator that has been shown to outperform gaussian mixture models (GMMs) and a host of other density estimators on several tasks \cite{Uria2013}. We show that obtaining probabilities and log-likelihoods from the combined RNN-RNADE model is tractable and fast. We show that the gradients with respect to the model parameters can be calculated exactly and that training can be easily performed with a gradient based optimiser. We evaluate the model's performance on real-valued datasets and demonstrate a marked improvement in performance. 
+Although the models described above have been successful on various tasks, they are unsuitable for modelling real-valued data. Both the RBM and the NADE are designed to explicitly model binary vectors. If the input data lies in $[0,1]$, then the RBM can be used via the mean-field approximation. Unbounded data can be modelled by using gaussian visible units and bernoulli hidden units. However these extensions of the RBM to real data have several known limitations \cite{theis2011all}. In this paper, we present a new model for real-valued sequential data by combining the RNN with the RNADE. The RNADE is a density estimator that has been shown to outperform gaussian mixture models (GMMs) and a host of other density estimators on several tasks \cite{Uria2013}. We show that obtaining probabilities and log-likelihoods from the combined RNN-RNADE model is tractable and fast. We show that the gradients with respect to the model parameters can be calculated exactly and that training can be easily performed with a gradient based optimiser. We evaluate the model's performance on real-valued datasets and demonstrate a marked improvement in performance. 
 
 %Modeling sequences is a fundamental problem in machine learning. Many popular models like Hidden Markov Models (HMMs) and Linear Dynamical Systems use latent variables to capture temporal properties of sequential model. However HMMs employ a 1-of-K state representation for the hidden state and trying to model larger histories can lead to exponentially large hidden states. RNNs are an interesting alternative for modeling sequential data and have recently been employed in speech recognition, MIR and various other tasks. RNNs employ a deterministic distributed hidden representation that can in theory capture temporal properties over very long time scales. However RNNs are limited by the effectiveness of gradient based optimisers and the size of the output space that they can model. To rectify this issue, a family of models that condition complex distribution estimators on the hidden state of an RNN have been proposed. The first such model was the RTRBM and it was later extended by the RNN-RBM and the RNN-NADE \cite{Boulanger-Lewandowski2012,}. 
 
@@ -104,38 +106,39 @@ Although the models described above have been successful in various tasks, they 
 
 \begin{figure}
 	\centering
-    \includegraphics[scale=0.8]{RNN.png}
-    \caption{Awesome RNN}
+    \includegraphics[scale=0.8]{RNN.pdf}
+    \caption{Graphical structure of the generative RNN. Broken arrows indicate optional connections for temporal smoothing.}
     \label{fig:rnn}
 \end{figure}
 
 
 An RNN defines a distribution over an output sequence $ \mathbf{x} \equiv \left\{ \mathbf{x}^t \in \mathbb{R}^n, t \leq T \right\}$ in the following manner:
 $$ P(\mathbf{x}) = \prod_{t=1}^{T} P(\mathbf{x}^t|\mathcal{A}^t)$$
-where $\mathcal{A}^t \equiv \left\{ \mathbf{x}^{\tau}|\tau < t \right\}$ is the history of the input sequence $\mathbf{x}$ so far, $P(\mathbf{x}^t|\mathcal{A}^t)$ is probability of observing observing $\mathbf{x}^t$ conditioned on the history of the sequence $\mathcal{A}^t$ at time $t$. RNN based generative models with different properties and capacities can be constructed by carefully choosing the form and parameterization of the conditional $P(\mathbf{x}^t|\mathcal{A}^t)$ as discussed in this section. 
+where $\mathcal{A}^t \equiv \left\{ \mathbf{x}^{\tau}|\tau < t \right\}$ is the history of the input sequence $\mathbf{x}$ until time $t$, $P(\mathbf{x}^t|\mathcal{A}^t)$ is the probability of observing $\mathbf{x}^t$ conditioned on the history of the sequence $\mathcal{A}^t$. RNN based generative models with different properties and capacities can be constructed by carefully choosing the form and parameterization of the conditional $P(\mathbf{x}^t|\mathcal{A}^t)$ as discussed later in this section. 
 
-In an RNN with a single hidden layer, the hidden layer state at time $t$ is given by:
+In an RNN with a single hidden layer, the hidden state at time $t$ is given by:
 \begin{equation}
 \label{rnn-hidden}
 \mathbf{h}^t = \sigma{(W_{in}\mathbf{x}^t + W_{rec}\mathbf{h}^{t-1} + \mathbf{b}_h)}
 \end{equation}
-where $W_{in}$ is the weight matrix from the input to the hidden layer, $W_{rec}$ is the weight matrix from the previous hidden state to the current state and $\mathbf{b}_h$ is the bias vector for the hidden layer. In a standard RNN, the next time step $\mathbf{x}^{t+1}$ is predicted as:
+where $W_{in}$ is the weight matrix from the input to the hidden layer, $W_{rec}$ is the recurrent weight matrix from the previous hidden state to the current state and $\mathbf{b}_h$ is the bias vector for the hidden layer. In a standard RNN, the next time step $\mathbf{x}^{t+1}$ is predicted as:
 $$ \mathbf{x}^{t+1} = \sigma{(W_{out}\mathbf{h}^{t} + \mathbf{b}_{out})}$$  
-where $W_{out}$ connects the hidden layer to the output layer and $\mathbf{b}_{out}$ is the bias. As shown in Figure 1, there can be optional connections between the input and the output and the output and the hidden layers for temporal smoothing. However as mentioned earlier, each of the outputs is unimodal and independent of the other outputs. These assumptions are not true for many types of data and RNNs that can predict high-dimensional multi-model conditional distributions are necessary. This can be achieved by letting the hidden layer of the RNN predict some of the parameters of a distribution estimator instead of predicting the outputs directly. 
+where $W_{out}$ connects the hidden layer to the output layer and $\mathbf{b}_{out}$ is the output bias. As shown in Figure \ref{fig:rnn}, there can be optional connections between the input and the input from the previous time-step for temporal smoothing. However as mentioned earlier, each of the outputs is unimodal and independent of the other outputs. 
+These assumptions are too restrictive for many real-world problems and have given rise to a new family of RNN-based generative models with high-dimensional multi-modal conditional distributions at each time-step. Such a model can be realised by letting the hidden layer of the RNN predict parameters of a distribution estimator just like in a mixture density network \cite{bishop1994mixture}.  
 
-In previous work \cite{Boulanger-Lewandowski2012}, the RNN was used to predict the hidden and visible biases of the an RBM and a NADE model to yield complex conditional distributions at each time step. If the gradients of a suitable cost function can be obtained with respect to the parameters of the distribution estimator, then the entire model can be trained using back-propagation through time \cite{rumelhart1985learning}. Although these models are very good at modelling sequences of binary vectors, they are unsuitable for modelling real-valued data. In order to use the power of this architecture for modelling real data, we present a model by combining the RNN and the RNADE. The RNADE is discussed in detail in following section and combination of the two models is described in section 4. 
+In previous work \cite{Boulanger-Lewandowski2012}, the RNN was used to predict the hidden and visible biases of an RBM and a NADE model to yield complex conditional distributions at each time step. Although these models are very good at modelling sequences of binary vectors, they are unsuitable for modelling real-valued data. It is easy to show that any distribution estimator can be used provided the gradients of the cost function with respect to the parameters of the density estimator are obtainable. The combined model can then be trained by maximising the likelihood of the training set and using back-propagation through time (BPTT) \cite{rumelhart1985learning}. In order to use the power of this architecture for modelling real data, we present a model that combines the RNN and the RNADE. The RNADE is discussed in detail in the following section and the combined model is described in Section \ref{RNN-RNADE}. 
 
 \section{The RNADE}
 \label{RNADE}
 
-The RNADE is a generalisation of the NADE to real-valued data. Like the NADE, the RNADE expresses the joint probability of the data, as a product of one-dimensional conditional distributions as follows:
+The RNADE is a generalisation of the NADE to model real-valued data. Like the NADE, the RNADE expresses the joint probability of the data as a product of one-dimensional conditional distributions as follows:
 $$ p(x) = \prod_{d=1}^{D} p(x_d|\mathbf{x_{<d}}) \: \text{with} \: p(x_d|\mathbf{x_{<d}}) = p_{\mathcal{M}(x_d|\theta_d)} $$ where $p_{\mathcal{M}}$ is a mixture of Gaussians and $\boldsymbol{x}_{<d}$ is a vector of all the dimensions of the data point $<d$. The RNADE is computationally efficient because of the weight sharing employed in the calculation of the hidden state: %The hidden state The RNADE models each of the conditional distributions by means of a feed-forward neural network with tied weights, with one neural network for each dimension. The activations of the hidden units are calculated as follows:
 
 $$ \mathbf{a}_d = \boldsymbol{W}_{.,<d}\boldsymbol{x}_d + \mathbf{c}$$
 $$ \boldsymbol{h}_d = \sigma (\rho_d \mathbf{a}_d)$$
 
 
-where $\mathbf{c} \in \mathbb{R}^{H}$ and $\boldsymbol{W} \in \mathbb{R}^{D \times (H-1)}$ are neural network parameters that are shared across all the neural networks and $\sigma(x) = 1/(1+e^{-x})$ is the sigmoid function. $\boldsymbol{W}_{.,<d}$ represents the first $D-1$ columns of the shared weight matrix. The term $\rho_d$ is a scaling factor which is also learnt from the data. The scaling factor was introduced in \cite{AISTATS2011_Bengio11} in order to prevent the sigmoid hidden units from saturating. The computation of the activations of the hidden units can be made more efficient by performing the computation as:
+where $\mathbf{c} \in \mathbb{R}^{H}$ and $\boldsymbol{W} \in \mathbb{R}^{D \times (H-1)}$ are neural network parameters that are shared across all the neural networks and $\sigma(x) = 1/(1+e^{-x})$ is the sigmoid function. $\boldsymbol{W}_{.,<d}$ represents the first $d-1$ columns of the shared weight matrix. The term $\rho_d$ is a scaling factor which is also learnt from the data. The scaling factor was introduced in \cite{AISTATS2011_Bengio11} in order to prevent the sigmoid hidden units from saturating. The computation of the activations of the hidden units can be made more efficient by performing the computation as:
 $$ \mathbf{a}_1 = \mathbf{c}, \: \: \; \mathbf{a}_{d+1} = \mathbf{a}_{d} + x_d \mathbf{W}_{.,d}$$
 
  Unlike the NADE which models each output as a bernouilli distribution, the outputs of each of the feed forward neural networks of the RNADE are mixtures of Gaussians. Therefore the RNADE comprises of $D$ mixture density networks with tied input-to-hidden weights. Once the hidden units of the RNADE have been computed, they are used to compute the parameters of the GMMs $\boldsymbol{\theta}_d  = \left\{ \boldsymbol{\alpha}_d, \boldsymbol{\mu}_d, \boldsymbol{\sigma}_d \right\}$ at each output, where $\boldsymbol{\alpha}_d$ are the mixing coefficients, $\boldsymbol{\mu}_d$ are the means and $\boldsymbol{\sigma}_d$ are the variances. These parameters are computed as follows:
@@ -145,24 +148,25 @@ $$ \boldsymbol{\mu}_d = {\mathbf{V}_{d}^{\mu}}^T \mathbf{h}_d + \mathbf{b}^{\mu}
 $$ \boldsymbol{\sigma}_d = \exp ({\mathbf{V}_{d}^{\sigma}}^T \mathbf{h}_d + \mathbf{b}^{\sigma}_{d})$$
 
 where $ \mathbf{V}_{d}^{\alpha},\mathbf{V}_{d}^{\mu},\mathbf{V}_{d}^{\sigma}$ are $H \times K$ matrices , $\mathbf{b}^{\alpha}_{d},\mathbf{b}^{\mu}_{d},\mathbf{b}^{\sigma}_{d}$ are vectors of size $K$ and $K$ is the number of components in the GMM. More concisely, the RNADE is parameterised by $\mathbf{V}^{\alpha},\mathbf{V}^{\mu},\mathbf{V}^{\sigma}$ which are $D \times H \times K$ matrices and $\mathbf{b}^{\alpha},\mathbf{b}^{\mu},\mathbf{b}^{\sigma}$ which are matrices of size $D \times K $.
-The parameters of the RNADE can be learnt by performing gradient ascent on the log-likelihood of the training set. 
+The parameters of the RNADE can be learnt by performing gradient ascent on the log-likelihood given a training set. 
 
 \section{RNN-RNADE}
 \label{RNN-RNADE}
 
 \begin{figure}
 	\centering
-    \includegraphics[scale=0.65]{RNN_RNADE.png}
-    \caption{Awesome RNN}
-    \label{fig:rnn}
+    \includegraphics[scale=0.65]{RNN-RNADE.pdf}
+    \caption{Graphical structure of the RNN-RNADE. The hidden state of the RNN at time $t$ predicts the parameters of the RNADE at $t+1$. }
+    \label{fig:rnn-rnade}
 \end{figure}
 
 
-The RNN-RNADE is a sequence of conditional distributions for each time-step of a sequence $\mathbf{x}$. As mentioned earlier, the parameters of the conditional distributions at each time step $t$ are a function of the hidden state of the RNN at the previous time-step $t-1$. We first define the notation in order to simplify discussion of the training algorithm later in the section. 
+The RNN-RNADE is a sequence of conditional distributions for each time-step of a sequence $\mathbf{x}$. As shown in Figure \ref{fig:rnn-rnade}, the parameters of the conditional distributions at each time step $t$ are a function of the hidden state of the RNN at the previous time-step $t-1$. We first define the notation in order to simplify discussion of the training algorithm later in the section. 
 
-From section \ref{RNADE}, the RNADE is parameterised by $ \theta \equiv \left\{ \mathbf{V}^{\alpha},\mathbf{V}^{\mu},\mathbf{V}^{\sigma},\mathbf{b}^{\alpha},\mathbf{b}^{\mu},\mathbf{b}^{\sigma} \right\}$. Let  $ \theta_t \equiv \left\{ \mathbf{V}^{\alpha}_{t},\mathbf{V}^{\mu}_{t},\mathbf{V}^{\sigma}_{t},\mathbf{b}^{\alpha}_{t},\mathbf{b}^{\mu}_{t},\mathbf{b}^{\sigma}_{t} \right\}$ denote the parameters of the conditional RNADE at time $t$. Although all the parameters of the RNADE at time $t$ can be a function of the hidden state at $t-1$, we consider the matrices $ \mathbf{V}^{\alpha},\mathbf{V}^{\mu},\mathbf{V}^{\sigma}$ to be fixed at each time step and only consider the case where the biases $\mathbf{b}^{\alpha},\mathbf{b}^{\mu},\mathbf{b}^{\sigma}$ to be time-dependent through the RNN hidden state. Therefore, $ \theta_t \equiv \left\{ \mathbf{V}^{\alpha},\mathbf{V}^{\mu},\mathbf{V}^{\sigma},\mathbf{b}^{\alpha}_{t},\mathbf{b}^{\mu}_{t},\mathbf{b}^{\sigma}_{t} \right\}$. As described later, we experiment with the architecture to ascertain which permutation of time dependent parameters $\mathbf{b}^{\alpha}_{t},\mathbf{b}^{\mu}_{t},\mathbf{b}^{\sigma}_{t}$ gives the best results.  
+From section \ref{RNADE}, the RNADE is parameterised by $ \theta \equiv \left\{ \mathbf{V}^{\alpha},\mathbf{V}^{\mu},\mathbf{V}^{\sigma},\mathbf{b}^{\alpha},\mathbf{b}^{\mu},\mathbf{b}^{\sigma} \right\}$. Let  $ \theta_t \equiv \left\{ \mathbf{V}^{\alpha}_{t},\mathbf{V}^{\mu}_{t},\mathbf{V}^{\sigma}_{t},\mathbf{b}^{\alpha}_{t},\mathbf{b}^{\mu}_{t},\mathbf{b}^{\sigma}_{t} \right\}$ denote the parameters of the conditional RNADE at time $t$. Although all the parameters of the RNADE at time $t$ can be a function of the hidden state at $t-1$, we consider the matrices $ \mathbf{V}^{\alpha},\mathbf{V}^{\mu},\mathbf{V}^{\sigma}$ to be fixed at each time step and only consider the case where the biases $\mathbf{b}^{\alpha},\mathbf{b}^{\mu},\mathbf{b}^{\sigma}$ to be time-dependent through the RNN hidden state. This constraint significantly reduces the number of parameters that need to be estimated and makes the model and training computationally more efficient. 
+Therefore, $ \theta_t \equiv \left\{ \mathbf{V}^{\alpha},\mathbf{V}^{\mu},\mathbf{V}^{\sigma},\mathbf{b}^{\alpha}_{t},\mathbf{b}^{\mu}_{t},\mathbf{b}^{\sigma}_{t} \right\}$. As described later, we experiment with the architecture to ascertain which permutation of time dependent parameters $\mathbf{b}^{\alpha}_{t},\mathbf{b}^{\mu}_{t},\mathbf{b}^{\sigma}_{t}$ gives the best results.  
 
-As illustrated by figure 2, the time-dependent RNADE parameters are give by:
+The time-dependent RNADE parameters are give by:
 \begin{equation}
 \label{one}
 \rvec(\mathbf{b}^{\alpha}_{t}) = \rvec(\mathbf{b}^{\alpha}) + W_{\alpha}\mathbf{h}^{t-1}
@@ -177,20 +181,19 @@ As illustrated by figure 2, the time-dependent RNADE parameters are give by:
 \end{equation}
 where $\rvec(A) = [a_{1,1}, ..., a_{1,n}, a_{2,1}, ..., a_{2,n}, ..., a_{m,1}, ..., a_{m,n}]$ for some $m \times n$ matrix $A$, $W_{\alpha},W_{\mu},W_{\sigma} \in \mathbb{R}^{r \times D c}$ are matrices from the hidden state of the RNN to the mixing coefficients, means and standard deviations of the RNADE respectively, $r$ is the number of hidden units in the RNN, $D$ is the dimensionality of the input vectors and $c$ is the number of components of each GMM in the RNADE. 
 
-Therefore using equations \ref{one},\ref{two},\ref{three} we can obtain the time-dependent biases for the RNADE at each time step. 
+%Therefore using equations \ref{one},\ref{two},\ref{three} we can obtain the time-dependent biases for the RNADE at each time step. 
 
 \subsection{Learning in the RNN-RNADE}
 
-For training the RNN-RNADE, we minimise the negative log-likelihood cost of observing a sequence $\mathbf{x}$. The cost function is given by:
-
-\begin{align*}
-L(\theta) &= - \log P(\mathbf{x})\\
-&= -\sum_{t=1}^{T} \log P(\mathbf{x}^t;\theta^t)\\
-\end{align*}
+The model can be trained by minimising the negative log-likelihood of training sequences using gradient descent. The cost function is given by:
+\begin{align}
+L(\theta) &= - \log P(\mathbf{x}) \nonumber\\ 
+&= -\sum_{t=1}^{T} \log P(\mathbf{x}^t;\theta^t) \label{cost}
+\end{align}
 
 The gradients of the conditionals $P(\mathbf{x}^t;\theta^t)$ with respect to the parameters of the RNADE can be calculated, the details of which are outlined in \cite{Uria2013}. Once we obtain the gradients with respect to the time-dependent parameters, the entire network can be trained using BPTT. 
 
-Suppose we obtain $ \frac{\partial L}{\partial \mathbf{b}^{\alpha}_{t}}, \frac{\partial L}{\partial \mathbf{b}^{\mu}_{t}}, \frac{\partial L}{\partial \mathbf{b}^{\sigma}_{t}}$, then the gradients with respect to the other model parameters can be calculated as follows:
+From Equation \ref{cost}, $\frac{\partial L}{\partial \mathbf{b}^{\alpha}_{t}} = \frac{\partial (-P(\mathbf{x}^t;\theta^t))}{\partial \mathbf{b}^{\alpha}_{t}}$ which can be easily obtained as shown in \cite{Uria2013}. The derivatives of the cost with respect to the other time-dependent parameters can be obtained in a similar manner. Once we obtain $ \frac{\partial L}{\partial \mathbf{b}^{\alpha}_{t}}, \frac{\partial L}{\partial \mathbf{b}^{\mu}_{t}}, \frac{\partial L}{\partial \mathbf{b}^{\sigma}_{t}}$, the gradients with respect to the other model parameters can be calculated as follows:
 
 \begin{equation}
 \frac{\partial L}{\partial W_{\alpha}} = \sum_{t=1}^T \frac{\partial L}{\partial \mathbf{b}^{\alpha}_{t}} \mathbf{h}^{t-1}

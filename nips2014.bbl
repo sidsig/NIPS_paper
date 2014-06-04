@@ -22,6 +22,11 @@ James Bergstra, Olivier Breuleux, Fr{\'{e}}d{\'{e}}ric Bastien, Pascal Lamblin,
   ({SciPy})}, June 2010.
 \newblock Oral Presentation.
 
+\bibitem{bishop1994mixture}
+Christopher~M Bishop.
+\newblock Mixture density networks.
+\newblock 1994.
+
 \bibitem{Boulanger-Lewandowski2012}
 N.~Boulanger-Lewandowski, Y.~Bengio, and P.~Vincent.
 \newblock Modeling temporal dependencies in high-dimensional sequences:
@@ -66,6 +71,11 @@ Ilya Sutskever, Geoffrey~E Hinton, and Graham~W Taylor.
 \newblock The recurrent temporal restricted boltzmann machine.
 \newblock In {\em Advances in Neural Information Processing Systems}, pages
   1601--1608, 2008.
+
+\bibitem{theis2011all}
+Lucas Theis, Sebastian Gerwinn, Fabian Sinz, and Matthias Bethge.
+\newblock In all likelihood, deep belief is not enough.
+\newblock {\em The Journal of Machine Learning Research}, 12:3071--3096, 2011.
 
 \bibitem{Uria2013}
 Benigno Uria, Iain Murray, and Hugo Larochelle.

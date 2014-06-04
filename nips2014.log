@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.30)  4 JUN 2014 15:22
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.30)  4 JUN 2014 17:56
 entering extended mode
  %&-line parsing enabled.
 **nips2014.tex
@@ -224,29 +224,43 @@ File: pdftex.def 2007/01/08 v0.04d Graphics/color for pdfTeX
 ))
 \Gin@req@height=\dimen118
 \Gin@req@width=\dimen119
-) (./nips2014.aux
-
-LaTeX Warning: Label `fig:rnn' multiply defined.
-
 )
+(/usr/share/texmf/tex/latex/caption/caption.sty
+Package: caption 2007/01/07 v3.0k Customising captions (AR)
+
+(/usr/share/texmf/tex/latex/caption/caption3.sty
+Package: caption3 2007/01/07 v3.0k caption3 kernel (AR)
+\captionmargin=\dimen120
+\captionmarginx=\dimen121
+\captionwidth=\dimen122
+\captionindent=\dimen123
+\captionparindent=\dimen124
+\captionhangindent=\dimen125
+)
+Package caption Info: float package v1.3 (or newer) detected on input line 275.
+
+Package caption Info: hyperref package v6.74m (or newer) detected on input line
+ 304.
+) (./nips2014.aux)
 \openout1 = `nips2014.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 61.
-LaTeX Font Info:    ... okay on input line 61.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 61.
-LaTeX Font Info:    ... okay on input line 61.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 61.
-LaTeX Font Info:    ... okay on input line 61.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 61.
-LaTeX Font Info:    ... okay on input line 61.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 61.
-LaTeX Font Info:    ... okay on input line 61.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 61.
-LaTeX Font Info:    ... okay on input line 61.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 61.
-LaTeX Font Info:    ... okay on input line 61.
-LaTeX Font Info:    Try loading font information for OT1+ptm on input line 61.
- (/usr/share/texmf/tex/latex/psnfss/ot1ptm.fd
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 62.
+LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 62.
+LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 62.
+LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 62.
+LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 62.
+LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 62.
+LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 62.
+LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 62.
+
+(/usr/share/texmf/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 ABD: EveryShipout initializing macros
@@ -258,7 +272,7 @@ File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package color Info: Driver file: pdftex.def on input line 130.
 )
-Package hyperref Info: Link coloring OFF on input line 61.
+Package hyperref Info: Link coloring OFF on input line 62.
 
 (/usr/share/texmf/tex/latex/hyperref/nameref.sty
 Package: nameref 2006/12/27 v2.28 Cross-referencing by name of section
@@ -268,86 +282,106 @@ Package: refcount 2006/02/20 v3.0 Data extraction from references (HO)
 )
 \c@section@level=\count121
 )
-LaTeX Info: Redefining \ref on input line 61.
-LaTeX Info: Redefining \pageref on input line 61.
+LaTeX Info: Redefining \ref on input line 62.
+LaTeX Info: Redefining \pageref on input line 62.
  (./nips2014.out)
 (./nips2014.out)
 \@outlinefile=\write3
 \openout3 = `nips2014.out'.
 
+ (/usr/share/texmf/tex/latex/ragged2e/ragged2e.sty
+Package: ragged2e 2003/03/25 v2.04 ragged2e Package (MS)
+
+(/usr/share/texmf/tex/latex/everysel/everysel.sty
+Package: everysel 1999/06/08 v1.03 EverySelectfont Package (MS)
+LaTeX Info: Redefining \selectfont on input line 125.
+)
+\CenteringLeftskip=\skip49
+\RaggedLeftLeftskip=\skip50
+\RaggedRightLeftskip=\skip51
+\CenteringRightskip=\skip52
+\RaggedLeftRightskip=\skip53
+\RaggedRightRightskip=\skip54
+\CenteringParfillskip=\skip55
+\RaggedLeftParfillskip=\skip56
+\RaggedRightParfillskip=\skip57
+\JustifyingParfillskip=\skip58
+\CenteringParindent=\skip59
+\RaggedLeftParindent=\skip60
+\RaggedRightParindent=\skip61
+\JustifyingParindent=\skip62
+)
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17.28> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 65.
-LaTeX Font Info:    Try loading font information for U+msa on input line 65.
- (/usr/share/texmf/tex/latex/amsfonts/umsa.fd
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 66.
+LaTeX Font Info:    Try loading font information for U+msa on input line 66.
+
+(/usr/share/texmf/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2002/01/19 v2.2g AMS font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 65.
+LaTeX Font Info:    Try loading font information for U+msb on input line 66.
 
 (/usr/share/texmf/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 65.
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 65.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 66.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 66.
 
 (/usr/share/texmf/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 66.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 67.
  [1{/usr/share/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
-] <RNN.png, id=70, 347.8596pt x 112.2594pt>
-File: RNN.png Graphic file (type png)
-
-<use RNN.png> [2pdfTeX warning (ext4): destination with the same identifier (na
-me{figure.1}) has been already used, duplicate ignored
+] <RNN.pdf, id=69, 348.30125pt x 112.42pt>
+File: RNN.pdf Graphic file (type pdf)
+ <use RNN.pdf>
+[2pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
+has been already used, duplicate ignored
 
 \@EveryShipout@Output ...@Org@Shipout \box \@cclv 
                                                   
-l.127 
-       <./RNN.png>] <RNN_RNADE.png, id=93, 605.6226pt x 203.3196pt>
-File: RNN_RNADE.png Graphic file (type png)
+l.130 
+       <./RNN.pdf>] <RNN-RNADE.pdf, id=124, 607.26875pt x 201.75375pt>
+File: RNN-RNADE.pdf Graphic file (type pdf)
 
-<use RNN_RNADE.png> [3] [4pdfTeX warning (ext4): destination with the same iden
+<use RNN-RNADE.pdf> [3] [4pdfTeX warning (ext4): destination with the same iden
 tifier (name{figure.2}) has been already used, duplicate ignored
 
 \@EveryShipout@Output ...@Org@Shipout \box \@cclv 
                                                   
 l.200 \end{equation}
-                     <./RNN_RNADE.png>]
+                     <./RNN-RNADE.pdf>]
 Missing character: There is no ï in font ptmr7t!
 Missing character: There is no ¿ in font ptmr7t!
 Missing character: There is no ½ in font ptmr7t!
  [5] (./nips2014.bbl [6]) [7]
-(./nips2014.aux)
-
-LaTeX Warning: There were multiply-defined labels.
-
- ) 
+(./nips2014.aux) ) 
 Here is how much of TeX's memory you used:
- 4263 strings out of 256216
- 56519 string characters out of 1917072
- 118705 words of memory out of 1500000
- 7438 multiletter control sequences out of 10000+200000
+ 4734 strings out of 256216
+ 65320 string characters out of 1917072
+ 132113 words of memory out of 1500000
+ 7893 multiletter control sequences out of 10000+200000
  20434 words of font info for 49 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
- 30i,9n,36p,1718b,389s stack positions out of 5000i,500n,6000p,200000b,15000s
-{/usr/share/texmf/fonts/enc/dvips/base/8r.enc}</usr/share/texmf/fonts/type1/b
-luesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmbx7.pfb></usr/s
-hare/texmf/fonts/type1/bluesky/cm/cmex10.pfb></usr/share/texmf/fonts/type1/blue
-sky/cm/cmmi10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi5.pfb></usr/shar
-e/texmf/fonts/type1/bluesky/cm/cmmi7.pfb></usr/share/texmf/fonts/type1/bluesky/
-cm/cmmib10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/t
-exmf/fonts/type1/bluesky/cm/cmr7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/c
-msy10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy7.pfb></usr/share/texmf/
-fonts/type1/bluesky/ams/msbm10.pfb></usr/share/texmf/fonts/type1/urw/courier/uc
-rr8a.pfb></usr/share/texmf/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texm
-f/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmr
-8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmri8a.pfb>
-Output written on nips2014.pdf (7 pages, 185332 bytes).
+ 35i,9n,38p,1718b,385s stack positions out of 5000i,500n,6000p,200000b,15000s
+{/usr/share/texmf/fonts/enc/dvips/base/8r.enc}</usr/share/tex
+mf/fonts/type1/bluesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/c
+mbx7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmex10.pfb></usr/share/texmf/
+fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi
+5.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi7.pfb></usr/share/texmf/font
+s/type1/bluesky/cm/cmmib10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr10.p
+fb></usr/share/texmf/fonts/type1/bluesky/cm/cmr7.pfb></usr/share/texmf/fonts/ty
+pe1/bluesky/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy7.pfb></
+usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/b
+luesky/ams/msbm10.pfb></usr/share/texmf/fonts/type1/urw/courier/ucrr8a.pfb></us
+r/share/texmf/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf/fonts/type1
+/urw/times/utmb8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmr8a.pfb></usr/
+share/texmf/fonts/type1/urw/times/utmri8a.pfb>
+Output written on nips2014.pdf (7 pages, 433673 bytes).
 PDF statistics:
- 215 PDF objects out of 1000 (max. 8388607)
- 39 named destinations out of 1000 (max. 131072)
+ 290 PDF objects out of 1000 (max. 8388607)
+ 42 named destinations out of 1000 (max. 131072)
  99 words of extra memory for PDF output out of 10000 (max. 10000000)
 
