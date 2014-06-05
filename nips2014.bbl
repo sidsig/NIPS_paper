@@ -27,6 +27,11 @@ Christopher~M Bishop.
 \newblock Mixture density networks.
 \newblock 1994.
 
+\bibitem{bishop2006pattern}
+Christopher~M Bishop et~al.
+\newblock {\em Pattern recognition and machine learning}, volume~1.
+\newblock springer New York, 2006.
+
 \bibitem{Boulanger-Lewandowski2012}
 N.~Boulanger-Lewandowski, Y.~Bengio, and P.~Vincent.
 \newblock Modeling temporal dependencies in high-dimensional sequences:
