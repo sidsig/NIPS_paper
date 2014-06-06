@@ -13,7 +13,7 @@
 %\documentstyle[nips14submit_09,times,art10]{article} % For LaTeX 2.09
 
 
-\title{Supplementary Material for the RNN-RNADE model}
+\title{Supplementary material for RNN-RNADE: A Tractable Model for High-Dimensional Real Valued Sequences}
 
 \author{
 David S.~Hippocampus\thanks{ Use footnote for providing further information
@@ -69,6 +69,10 @@ Address \\
 % \end{abstract}
 
 \section{Introduction}
+
+This document contains supplementary material which could not be added to the paper. Section 2 describes an algorithm for calculating the gradients of the joint RNN-RNADE model and updating the parameters of the model based on these gradients. 
+
+\section{Training Algorithm}
 % The RNADE fprop:
 % $$ p(x) = \prod_{d=1}^{D} p(x_d|\mathbf{x_{<d}}) \: \text{with} \: p(x_d|\mathbf{x_{<d}}) = p_{\mathcal{M}(x_d|\theta_d)} $$
 % $$ \mathbf{a}_{d+1} = \mathbf{a}_{d} + x_d\mathbf{W.,}_{d}$$
@@ -99,12 +103,9 @@ Address \\
 % \EndProcedure
 % \end{algorithmic}
 % \end{algorithm}
+This section describes an algorithm for training the RNN-RNADE using the back-propagation. Further details on the derivation of the gradients for the RNADE can be found in the supplementary for the original RNADE paper \cite{Uria2013}. We first present the algorithm for the calculation of the gradients for the RNADE. Our gradients differ slightly from the gradients in \cite{Uria2013}, because we use sigmoid activation functions for the RNADE instead of rectified linear activations as prescribed in \cite{Uria2013}. In our initial experiments with \textit{mocap} dataset, we found that the training algorithm for the joint model was more stable and less prone to exploding gradients, when sigmoid activations were used for the RNADE. 
 
-This document contains derivations of the gradients for the RNN-RNADE. 
-The cost function for training the RNN-RNADE is given by:
-
-
-
+Algorithm 1 shows the how the gradients for the RNADE are computed. Algorithm 2 then shows how the gradients from the RNADE can be used to train the joint model. 
 
 \begin{algorithm}
 \caption{RNADE gradients}
@@ -190,7 +191,11 @@ The cost function for training the RNN-RNADE is given by:
 \State $\partial W_{\alpha} \gets \partial W_{\alpha} + \partial \mathbf{b}^{\alpha}_{t}{\mathbf{h}^{t-1}}^T$
 \State $\partial W_{\mu} \gets \partial W_{\mu} + \partial \mathbf{b}^{\mu}_{t}{\mathbf{h}^{t-1}}^T$
 \State $\partial W_{\sigma} \gets \partial W_{\sigma} + \partial \mathbf{b}^{\sigma}_{t}{\mathbf{h}^{t-1}}^T$
-\State $\partial \mathbf{h}^{t} \gets W_{rec}\partial  \mathbf{h}^{t+1}\mathbf{h}^{t+1}(1-\mathbf{h}^{t+1}) + W_{\alpha} \partial \mathbf{b}^{\alpha}_{t+1} + W_{\mu} \partial \mathbf{b}^{\mu}_{t+1} + W_{\sigma} \partial \mathbf{b}^{\sigma}_{t+1}$
+\If {$t=T$}
+	\State $\partial \mathbf{h}^{t} \gets  W_{\alpha} \partial \mathbf{b}^{\alpha}_{t+1} + W_{\mu} \partial \mathbf{b}^{\mu}_{t+1} + W_{\sigma} \partial \mathbf{b}^{\sigma}_{t+1}$
+\Else
+	\State $\partial \mathbf{h}^{t} \gets W_{rec}\partial  \mathbf{h}^{t+1}\mathbf{h}^{t+1}(1-\mathbf{h}^{t+1}) + W_{\alpha} \partial \mathbf{b}^{\alpha}_{t+1} + W_{\mu} \partial \mathbf{b}^{\mu}_{t+1} + W_{\sigma} \partial \mathbf{b}^{\sigma}_{t+1}$
+\EndIf
 \State $\partial \mathbf{b}_h \gets \partial \mathbf{b}_h + \partial \mathbf{h}^{t} \mathbf{h}^{t} (1-\mathbf{h}^{t})$
 \State $\partial W_{rec} \gets \partial W_{rec} + \partial \mathbf{h}^{t} \mathbf{h}^{t} (1-\mathbf{h}^{t}){\mathbf{h}^{t-1}}^T$
 \State $\partial W_{in} \gets \partial W_{in} + \partial \mathbf{h}^{t} \mathbf{h}^{t} (1-\mathbf{h}^{t})\mathbf{x}_t^T$
@@ -198,102 +203,9 @@ The cost function for training the RNN-RNADE is given by:
 \end{algorithmic}
 \end{algorithm}
 
-% Gradients for the RNADE:
-
-% $$ \phi_i(x_d| \mathbf{x}_{<d}) = \frac{1}{\sqrt{2 \pi} \boldsymbol{\sigma}_{d,i}} \exp{\left\{-\frac{(x_d-\boldsymbol{\mu}_{d,i})^2}{2 \boldsymbol{\sigma}_{d,i}^2}\right\}}$$
-
-% Posterior/Responsibility:
-% $$ \pi_{i}(x_d|\mathbf{x}_{<d}) = \frac{\boldsymbol{\alpha}_{d,i} \phi_i(x_d| \mathbf{x}_{<d})}{\sum_{j=1}^K \boldsymbol{\alpha}_{d,j} \phi_j(x_d| \mathbf{x}_{<d})}$$
-
-% Gradients with respect to the gaussian parameters:
-% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{V}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \mathbf{h}$$
-
-% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{b}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}}$$
-
-% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{V}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \mathbf{h}$$
-
-% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{b}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}}$$
-
-% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{V}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \mathbf{h}$$
-
-% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{b}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}}$$
-
-% Gradient with respect to the hidden activations:
-
-% $$\frac{\partial p(\mathbf{x})}{\partial \mathbf{h}_d} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{h}_{d}} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{h}_{d}} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{h}_{d}}$$
-
-% $$\frac{\partial p(\mathbf{x})}{\partial \mathbf{h}_d} =  \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \mathbf{V}_{d}^{\alpha} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \mathbf{V}_{d}^{\mu} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \mathbf{V}_{d}^{\sigma} $$
-
-% \newpage
-% \section{RNN-RNADE fprop}
-
-% $$p(x_{1}^{T}) = \prod_{1}^{T}p(x^{t}|\mathcal{A}^t) \: \text{where} \: \mathcal{A}^t \equiv \left\{x^{\tau}| \tau < t \right\}$$
-
-% Maximum-likelihood Training: 
-
-% $$ \log {p(x_{1}^{T})} = \sum_{1}^{T} \log{p(x^{t}|\mathcal{A}^t)}$$ 
-% $$ \log {p(x_{1}^{T})} = \sum_{t=1}^{T} \sum_{d=1}^{D} \log p(x_d^t|\mathbf{x}_{<d}^t)$$
-% $W'$ is the weight matrix from the reccurrent layer to the mixing coefficients. \\
-% $W''$ is the weight matrix from the reccurrent layer to the means. \\
-% $W'''$ is the weight matrix from the reccurrent layer to the sigmas. \\
-% The rest of the architecture is similar to the RNN-RBM paper. 
-
-% $$ \hat{h}^{(t)} = \sigma(W_2 \mathbf{x}^{t} + W_3 \hat{h}^{(t-1)} + b_{\hat h}) $$
-% $$ r_{\alpha} = W^{\alpha} \hat{h}^{(t-1)}$$
-% $$ r_{\mu} = W^{\mu} \hat{h}^{(t-1)}$$
-% $$ r_{\sigma} = W^{\sigma} \hat{h}^{(t-1)}$$
-
-% \begin{algorithm}
-% \caption{RNN-RNADE fprop}\label{euclid}
-% \begin{algorithmic}%[1]
-% \Procedure{fprop}{}
-% \State $a \gets c$
-% \State $p \gets 1$
-% \For{$t$ from $1$ to $T$}
-% \For{$d$ from $1$ to $D$}
-% \State $\mathbf{\psi_d} = \mathbf{\rho_d} \mathbf a$
-% \State $\mathbf{h_d} = \text{sigm}(\mathbf{\psi_d})$
-% \State $\mathbf{z}_{d}^{\alpha} = \mathbf{{V_{d}^{\alpha}}^{T}h_d} + \mathbf{b_{d}^{\alpha}} + \mathbf{r_{d}^{\alpha}} = \mathbf{{V_{d}^{\alpha}}^{T}h_d} + \mathbf{b_{d}^{\alpha}} + \mathbf{r_{d}^{\alpha}}$
-% \State $\mathbf{z}_{d}^{\mu} = \mathbf{{V_{d}^{\mu}}^{T}h_d} + \mathbf{b_{d}^{\mu}} + \mathbf{r_{d}^{\mu}}$
-% \State $\mathbf{z}_{d}^{\sigma} = \mathbf{{V_{d}^{\sigma}}^{T}h_d} + \mathbf{b_{d}^{\sigma}} + \mathbf{r_{d}^{\sigma}}$
-% \State $\boldmath{\alpha_d} = \text{softmax}(\mathbf{z}_{d}^{\alpha})$
-% \State $\boldmath{\mu_d} = \mathbf{z}_{d}^{\mu}$
-% \State $\boldmath{\sigma_d} = \text{exp}(\mathbf{z}_{d}^{\sigma})$
-% \State $p(\mathbf{x}) = p(\mathbf{x})p_{\mathcal{M}} (x_d;\boldmath{\alpha_d};\boldmath{\mu_d};\boldmath{\sigma_d})$
-% \State $ \mathbf{a} = \mathbf{a} + x_d^{t}\mathbf{W.,}_{d}$
-% \EndFor
-% \EndFor
-% \EndProcedure
-% \end{algorithmic}
-% \end{algorithm}
-
-% Gradients for the RNN-RNADE:
-
-% $$ \phi_i(x_d| \mathbf{x}_{<d}) = \frac{1}{\sqrt{2 \pi} \boldsymbol{\sigma}_{d,i}} \exp{\left\{-\frac{(x_d-\boldsymbol{\mu}_{d,i})^2}{2 \boldsymbol{\sigma}_{d,i}^2}\right\}}$$
-
-% Posterior/Responsibility:
-% $$ \pi_{i}(x_d|\mathbf{x}_{<d}) = \frac{\boldsymbol{\alpha}_{d,i} \phi_i(x_d| \mathbf{x}_{<d})}{\sum_{j=1}^K \boldsymbol{\alpha}_{d,j} \phi_j(x_d| \mathbf{x}_{<d})}$$
-
-% Gradients with respect to the gaussian parameters:
-% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{V}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \mathbf{h}$$
-
-% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{b}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}}$$
-
-
-
-% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{V}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \mathbf{h}$$
-
-% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{b}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}}$$
-
-% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{V}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \mathbf{h}$$
-
-% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{b}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}}$$
-
-% Gradient with respect to the hidden activations:
-
-% $$\frac{\partial p(\mathbf{x})}{\partial \mathbf{h}_d} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{h}_{d}} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{h}_{d}} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{h}_{d}}$$
-
-% $$\frac{\partial p(\mathbf{x})}{\partial \mathbf{h}_d} =  \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \mathbf{V}_{d}^{\alpha} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \mathbf{V}_{d}^{\mu} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \mathbf{V}_{d}^{\sigma} $$
+\newpage
+\bibliography{bibliography}
+\bibliographystyle{plain}
 
 
 \end{document}

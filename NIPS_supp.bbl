@@ -1,0 +1,9 @@
+\begin{thebibliography}{1}
+
+\bibitem{Uria2013}
+Benigno Uria, Iain Murray, and Hugo Larochelle.
+\newblock Rnade: The real-valued neural autoregressive density-estimator.
+\newblock In {\em Advances in Neural Information Processing Systems 26}, pages
+  2175--2183. 2013.
+
+\end{thebibliography}
