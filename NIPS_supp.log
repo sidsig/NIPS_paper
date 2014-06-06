@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.30)  6 JUN 2014 13:41
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.30)  6 JUN 2014 16:16
 entering extended mode
  %&-line parsing enabled.
 **NIPS_supp.tex
@@ -259,33 +259,33 @@ Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 111.
  [1{/usr/share/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
-] [2] [3] [4] (./NIPS_supp.bbl)
-[5] (./NIPS_supp.aux) ) 
+] [2] [3] (./NIPS_supp.bbl) [4]
+(./NIPS_supp.aux) ) 
 Here is how much of TeX's memory you used:
- 3786 strings out of 256216
- 50996 string characters out of 1917072
+ 3785 strings out of 256216
+ 50990 string characters out of 1917072
  125875 words of memory out of 1500000
  7019 multiletter control sequences out of 10000+200000
  19189 words of font info for 43 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
- 30i,9n,36p,1360b,320s stack positions out of 5000i,500n,6000p,200000b,15000s
-{/usr/share/texmf/fonts/enc/dvips/base/8r.enc}</usr/shar
-e/texmf/fonts/type1/bluesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bluesky
-/cm/cmbx7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmex10.pfb></usr/share/t
-exmf/fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/texmf/fonts/type1/bluesky/cm
-/cmmi5.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi7.pfb></usr/share/texmf
-/fonts/type1/bluesky/cm/cmmib10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/c
-mmib7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/texmf/
-fonts/type1/bluesky/cm/cmr5.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr7.p
-fb></usr/share/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf/fonts/
-type1/bluesky/cm/cmsy7.pfb></usr/share/texmf/fonts/type1/public/cmex/fmex7.pfb>
-</usr/share/texmf/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf/fonts/ty
-pe1/urw/helvetic/uhvb8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmb8a.pfb>
-</usr/share/texmf/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf/fonts/type
-1/urw/times/utmri8a.pfb>
-Output written on NIPS_supp.pdf (5 pages, 120540 bytes).
+ 30i,9n,36p,1359b,320s stack positions out of 5000i,500n,6000p,200000b,15000s
+{/usr/share/texmf/fonts/enc/dvips/base/8r.enc}</usr/share/te
+xmf/fonts/type1/bluesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/
+cmbx7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmex10.pfb></usr/share/texmf
+/fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmm
+i5.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi7.pfb></usr/share/texmf/fon
+ts/type1/bluesky/cm/cmmib10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/cmmib
+7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr10.pfb></usr/share/texmf/font
+s/type1/bluesky/cm/cmr5.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr7.pfb><
+/usr/share/texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf/fonts/type
+1/bluesky/cm/cmsy7.pfb></usr/share/texmf/fonts/type1/public/cmex/fmex7.pfb></us
+r/share/texmf/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf/fonts/type1/
+urw/helvetic/uhvb8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmb8a.pfb></us
+r/share/texmf/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf/fonts/type1/ur
+w/times/utmri8a.pfb>
+Output written on NIPS_supp.pdf (4 pages, 119818 bytes).
 PDF statistics:
- 135 PDF objects out of 1000 (max. 8388607)
- 14 named destinations out of 1000 (max. 131072)
+ 131 PDF objects out of 1000 (max. 8388607)
+ 13 named destinations out of 1000 (max. 131072)
  49 words of extra memory for PDF output out of 10000 (max. 10000000)
 
