@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.30)  6 JUN 2014 13:40
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.4.30)  6 JUN 2014 14:42
 entering extended mode
  %&-line parsing enabled.
 **nips2014.tex
@@ -337,16 +337,16 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 67.
  [1{/usr/share/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
-] <RNN.pdf, id=99, 348.30125pt x 112.42pt>
+] <RNN.pdf, id=99, 356.33125pt x 156.585pt>
 File: RNN.pdf Graphic file (type pdf)
- <use RNN.pdf>
-[2pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
-has been already used, duplicate ignored
+
+<use RNN.pdf> [2pdfTeX warning (ext4): destination with the same identifier (na
+me{figure.1}) has been already used, duplicate ignored
 
 \@EveryShipout@Output ...@Org@Shipout \box \@cclv 
                                                   
-l.105 
-       <./RNN.pdf>] <RNADE.pdf, id=150, 183.68625pt x 274.02374pt>
+l.103 
+       <./RNN.pdf>] <RNADE.pdf, id=158, 183.68625pt x 274.02374pt>
 File: RNADE.pdf Graphic file (type pdf)
 
 <use RNADE.pdf> [3pdfTeX warning (ext4): destination with the same identifier (
@@ -354,21 +354,18 @@ name{figure.2}) has been already used, duplicate ignored
 
 \@EveryShipout@Output ...@Org@Shipout \box \@cclv 
                                                   
-l.128 
-       <./RNADE.pdf>] <RNN-RNADE.pdf, id=190, 607.26875pt x 201.75375pt>
+l.125 ...= \mathbf{a}_{d} + x_d \mathbf{W}_{.,d}$$
+                                                   <./RNADE.pdf>]
+<RNN-RNADE.pdf, id=198, 607.26875pt x 201.75375pt>
 File: RNN-RNADE.pdf Graphic file (type pdf)
-
-<use RNN-RNADE.pdf> [4pdfTeX warning (ext4): destination with the same identifi
-er (name{figure.3}) has been already used, duplicate ignored
+ <use RNN-RNADE.pdf> [4pdfTeX warning (ext4): destination with the same identif
+ier (name{figure.3}) has been already used, duplicate ignored
 
 \@EveryShipout@Output ...@Org@Shipout \box \@cclv 
                                                   
-l.169 \subsection
-                 {Learning in the RNN-RNADE} <./RNN-RNADE.pdf>] [5] [6]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [7]
-(./nips2014.bbl [8]) [9] (./nips2014.aux)
+l.164 \end{equation}
+                     <./RNN-RNADE.pdf>] [5] [6] [7] (./nips2014.bbl [8])
+[9] (./nips2014.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
@@ -380,7 +377,7 @@ Here is how much of TeX's memory you used:
  7922 multiletter control sequences out of 10000+200000
  28413 words of font info for 68 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
- 35i,8n,38p,1731b,387s stack positions out of 5000i,500n,6000p,200000b,15000s
+ 35i,9n,38p,1772b,385s stack positions out of 5000i,500n,6000p,200000b,15000s
 {/usr/share/texmf/fonts/enc/dvips/base/8r.enc}</usr/share/texmf/fonts/type1/b
 luesky/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmbx7.pfb></usr/s
 hare/texmf/fonts/type1/bluesky/cm/cmex10.pfb></usr/share/texmf/fonts/type1/blue
@@ -394,9 +391,9 @@ fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/bluesky/ams/msbm1
 nts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texmf/fonts/type1/urw/times/utmb8
 a.pfb></usr/share/texmf/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf/font
 s/type1/urw/times/utmri8a.pfb>
-Output written on nips2014.pdf (9 pages, 588108 bytes).
+Output written on nips2014.pdf (9 pages, 672337 bytes).
 PDF statistics:
- 363 PDF objects out of 1000 (max. 8388607)
+ 371 PDF objects out of 1000 (max. 8388607)
  54 named destinations out of 1000 (max. 131072)
  152 words of extra memory for PDF output out of 10000 (max. 10000000)
 
