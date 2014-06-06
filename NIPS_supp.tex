@@ -70,7 +70,7 @@ Address \\
 
 \section{Introduction}
 
-This document contains supplementary material which could not be added to the paper. Section 2 describes an algorithm for calculating the gradients of the joint RNN-RNADE model and updating the parameters of the model based on these gradients. 
+This document contains supplementary material for the paper ``RNN-RNADE: A Tractable Model for High-Dimensional Real Valued Sequences''. Section 2 describes an algorithm for calculating the gradients of the joint RNN-RNADE model and updating the parameters of the model based on these gradients. The last 2 sections describe videos that are included in the supplementary material, which were generated as outputs of the experiments. 
 
 \section{Training Algorithm}
 % The RNADE fprop:
@@ -202,6 +202,12 @@ Algorithm 1 shows the how the gradients for the RNADE are computed. Algorithm 2 
 \EndFor
 \end{algorithmic}
 \end{algorithm}
+\newpage
+\section{2-D stochastic trajectory supplementary material}
+The experiment described in Section 5.1 in the main text applied an RNN-RNADE to the problem of predicting the next point in a stochastic sequence. Enclosed with this document is the video,\\ {\it trajectory.m4v}, which shows an example unseen trajectory and predictions made by the RNN-RNADE. At each time-step \(T=t\), the RNN-RNADE produces 10 samples from the predicted distribution at \(T=t+1\) conditioned on \(T<t+1\). The ground truth (actual value at \(t+1\)) is depicted with a circle marker while the predictions are displayed with a cross. The means of the distribution clearly follow the path of the trajectory. 
+
+ \section{Videos of bouncing balls supplementary material}
+The experiment described in Section 5.3 in the main text applied an RNN-RNADE to the problem of predicting the pixels in the next frame of a video depicting 3 bouncing balls. The video was randomly generated and has not been previously seen by the RNN-RNADE. At each time-step \(T=t\), the RNN-RNADE produces 1 samples from the predicted distribution at \(T=t+1\) conditioned on \(T<t+1\).. Enclosed with this document is the video, {\it bouncing.m4v}, which shows (top row left) the ground truth (actual frame at \(t+1\)), (top row middle) the frame sampled by the RNN-RNADE from the predicted distribution at  \(t+1\), (top row right) the absolute difference per pixel between the ground truth and the sampled value and (bottom) the sum of the squared errors between the ground truth and sampled pixels per frame. The video shows that the sampled frame is similar to the ground truth but there is a small amount of noise in space where there are no balls. There is also noise around the outline of the balls. Apart from the first frame, the highest error occurs where two of the balls overlap at \(t=69\) and \(t=110\), implying that the dynamics of this interaction have not been entirely captured by the model. Elsewhere, the sample error is low. The mean of the sum of the squared errors per frame on this sequence is 2.08. 
 
 \newpage
 \bibliography{bibliography}
