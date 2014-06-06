@@ -6,9 +6,10 @@
 \usepackage{hyperref}
 \usepackage{url}
 \usepackage{amsmath}
+%\usepackage{algpseudocode}
+%\usepackage[noend]{algpseudocode}
 \usepackage{algorithm}
-\usepackage[noend]{algpseudocode}
-
+\usepackage{algpseudocode}
 %\documentstyle[nips14submit_09,times,art10]{article} % For LaTeX 2.09
 
 
@@ -63,138 +64,236 @@ Address \\
 
 \maketitle
 
-\begin{abstract}
-This document contains some of the mathematical derivations for the RNN-RNADE model. 
-\end{abstract}
+% \begin{abstract}
+% This document contains some of the mathematical derivations for the RNN-RNADE model. 
+% \end{abstract}
 
 \section{Introduction}
-The RNADE fprop:
-$$ p(x) = \prod_{d=1}^{D} p(x_d|\mathbf{x_{<d}}) \: \text{with} \: p(x_d|\mathbf{x_{<d}}) = p_{\mathcal{M}(x_d|\theta_d)} $$
-$$ \mathbf{a}_{d+1} = \mathbf{a}_{d} + x_d\mathbf{W.,}_{d}$$
-$$ \mathbf{h_d} = \text{sigm}(\rho_d \mathbf{a_d})$$
-$$ \boldmath{\alpha}_d = \text{softmax}(\mathbf{V_{d}^{\alpha}h_d} + \mathbf{b_{d}^{\alpha}})$$
-$$ \boldmath{\mu}_d = \mathbf{V}_{d}^{\mu}\mathbf{h}_d + \mathbf{b}_{d}^{\mu}$$
-$$\boldmath{\sigma}_d = \text{exp}(\mathbf{V}_{d}^{\sigma}\mathbf{h}_d + \mathbf{b}_{d}^{\sigma})$$
+% The RNADE fprop:
+% $$ p(x) = \prod_{d=1}^{D} p(x_d|\mathbf{x_{<d}}) \: \text{with} \: p(x_d|\mathbf{x_{<d}}) = p_{\mathcal{M}(x_d|\theta_d)} $$
+% $$ \mathbf{a}_{d+1} = \mathbf{a}_{d} + x_d\mathbf{W.,}_{d}$$
+% $$ \mathbf{h_d} = \text{sigm}(\rho_d \mathbf{a_d})$$
+% $$ \boldmath{\alpha}_d = \text{softmax}(\mathbf{V_{d}^{\alpha}h_d} + \mathbf{b_{d}^{\alpha}})$$
+% $$ \boldmath{\mu}_d = \mathbf{V}_{d}^{\mu}\mathbf{h}_d + \mathbf{b}_{d}^{\mu}$$
+% $$\boldmath{\sigma}_d = \text{exp}(\mathbf{V}_{d}^{\sigma}\mathbf{h}_d + \mathbf{b}_{d}^{\sigma})$$
+
+
+% \begin{algorithm}
+% \caption{RNADE fprop}\label{euclid}
+% \begin{algorithmic}%[1]
+% \Procedure{fprop}{}
+% \State $a \gets c$
+% \State $p \gets 1$
+% \For{$d$ from $1$ to $D$}
+% \State $\mathbf{\psi_d} = \mathbf{\rho_d} \mathbf a$
+% \State $\mathbf{h_d} = \text{sigm}(\mathbf{\psi_d})$
+% \State $\mathbf{z}_{d}^{\alpha} = \mathbf{{V_{d}^{\alpha}}^{T}h_d} + \mathbf{b_{d}^{\alpha}} $
+% \State $\mathbf{z}_{d}^{\mu} = \mathbf{{V_{d}^{\mu}}^{T}h_d} + \mathbf{b_{d}^{\mu}}$
+% \State $\mathbf{z}_{d}^{\sigma} = \mathbf{{V_{d}^{\sigma}}^{T}h_d} + \mathbf{b_{d}^{\sigma}}$
+% \State $\boldmath{\alpha_d} = \text{softmax}(\mathbf{z}_{d}^{\alpha})$
+% \State $\boldmath{\mu_d} = \mathbf{z}_{d}^{\mu}$
+% \State $\boldmath{\sigma_d} = \text{exp}(\mathbf{z}_{d}^{\sigma})$
+% \State $p(\mathbf{x}) = p(\mathbf{x})p_{\mathcal{M}} (x_d;\boldmath{\alpha_d};\boldmath{\mu_d};\boldmath{\sigma_d})$
+% \State $ \mathbf{a} = \mathbf{a} + x_d\mathbf{W.,}_{d}$
+% \EndFor
+% \EndProcedure
+% \end{algorithmic}
+% \end{algorithm}
+
+This document contains derivations of the gradients for the RNN-RNADE. 
+The cost function for training the RNN-RNADE is given by:
+
+
 
 
 \begin{algorithm}
-\caption{RNADE fprop}\label{euclid}
+\caption{RNADE gradients}
 \begin{algorithmic}%[1]
-\Procedure{fprop}{}
-\State $a \gets c$
-\State $p \gets 1$
+\State $\mathbf{a} \gets \mathbf{c}$
 \For{$d$ from $1$ to $D$}
-\State $\mathbf{\psi_d} = \mathbf{\rho_d} \mathbf a$
-\State $\mathbf{h_d} = \text{sigm}(\mathbf{\psi_d})$
-\State $\mathbf{z}_{d}^{\alpha} = \mathbf{{V_{d}^{\alpha}}^{T}h_d} + \mathbf{b_{d}^{\alpha}} $
-\State $\mathbf{z}_{d}^{\mu} = \mathbf{{V_{d}^{\mu}}^{T}h_d} + \mathbf{b_{d}^{\mu}}$
-\State $\mathbf{z}_{d}^{\sigma} = \mathbf{{V_{d}^{\sigma}}^{T}h_d} + \mathbf{b_{d}^{\sigma}}$
-\State $\boldmath{\alpha_d} = \text{softmax}(\mathbf{z}_{d}^{\alpha})$
-\State $\boldmath{\mu_d} = \mathbf{z}_{d}^{\mu}$
-\State $\boldmath{\sigma_d} = \text{exp}(\mathbf{z}_{d}^{\sigma})$
-\State $p(\mathbf{x}) = p(\mathbf{x})p_{\mathcal{M}} (x_d;\boldmath{\alpha_d};\boldmath{\mu_d};\boldmath{\sigma_d})$
-\State $ \mathbf{a} = \mathbf{a} + x_d\mathbf{W.,}_{d}$
+	\State $\mathbf{a} \gets \mathbf{a} + x_{d}\mathbf{W}_{.,d} $
 \EndFor
-\EndProcedure
+\For{$d$ from $D$ to $1$}
+\State $\boldsymbol{\psi} \gets \rho_{d} \mathbf a$
+\State $\mathbf{h} \gets \sigma(\boldsymbol{\psi})$
+\State $\mathbf{z}^{\alpha} \gets {\mathbf{V}^{\alpha}_{d}}^{T}\mathbf{h} + \mathbf{b}^{\alpha}_{d} $
+\State $\mathbf{z}^{\mu} \gets {\mathbf{V}^{\mu}_{d}}^{T}\mathbf{h} + \mathbf{b}^{\mu}_{d} $
+\State $\mathbf{z}^{\sigma} \gets {\mathbf{V}^{\sigma}_{d}}^{T}\mathbf{h} + \mathbf{b}^{\sigma}_{d} $
+\State $\boldsymbol{\alpha} \gets \text{softmax}(\mathbf{z}^{\alpha})$
+\State $\boldsymbol{\mu} = \mathbf{z}^{\mu}$
+\State $\boldsymbol{\sigma} \gets \text{exp}(\mathbf{z}^{\sigma})$
+\State $\boldsymbol{\phi} \gets \frac{1}{2} \frac{(\boldsymbol{\mu}-\mathbf{x}_d)^2}{\boldsymbol{\sigma}^2} - \log \boldsymbol{\sigma} - \frac{1}{2}\log(2\pi)$
+\State $\boldsymbol{\pi} \gets \frac{\boldsymbol{\alpha}\phi}{\sum_{j=1}^{K} \alpha_j \phi_j}$
+\State $\partial z^{\alpha} \gets \boldsymbol{\pi} - \boldsymbol{\alpha}$
+\State $\partial \boldsymbol{V}^{\alpha}_{d} \gets \partial z^{\alpha} \mathbf{h}$
+\State $\partial \mathbf{b}^{\alpha}_{d} \gets \partial z^{\alpha}$
+\State $\partial z^{\mu} \gets \boldsymbol{\pi}(x_d - \boldsymbol{\mu})/\boldsymbol{\sigma}^2$
+\State $\partial \boldsymbol{V}^{\mu}_{d} \gets \partial z^{\mu} \mathbf{h}$
+\State $\partial \mathbf{b}^{\mu}_{d} \gets \partial z^{\mu}$
+\State $\partial z^{\sigma} \gets \boldsymbol{\pi}\left\{ (x_d - \boldsymbol{\mu})/\boldsymbol{\sigma}^2 -1\right\}$
+\State $\partial \boldsymbol{V}^{\sigma}_{d} \gets \partial z^{\sigma} \mathbf{h}$
+\State $\partial \mathbf{b}^{\sigma}_{d} \gets \partial z^{\sigma}$
+\State $\partial \mathbf{h} \gets z^{\alpha}\boldsymbol{V}^{\alpha}_{d} + z^{\mu}\boldsymbol{V}^{\mu}_{d} + z^{\sigma}\boldsymbol{V}^{\sigma}_{d}$
+\State $\partial \boldsymbol{\phi} = \partial \mathbf{h}\sigma(\boldsymbol{\psi})(1-\sigma(\boldsymbol{\psi}))$
+\State $\partial \rho_d \gets \sum_{j} \partial \boldsymbol{\psi}_ja_j$
+\State $\partial \mathbf{a} \gets \partial \mathbf{a} + \partial \boldsymbol{\psi}_{\rho}$
+\State $\partial \mathbf{W}_{.,d} \gets \partial \mathbf{a}x_d$
+\If {$d=1$}
+	\State $\partial \mathbf{c} \gets \partial \mathbf{a}$
+\Else
+	\State $\mathbf{a} \gets \mathbf{a} - x_d \mathbf{W}_{.,d}$
+\EndIf
+\EndFor
 \end{algorithmic}
 \end{algorithm}
 
-Gradients for the RNADE:
-
-$$ \phi_i(x_d| \mathbf{x}_{<d}) = \frac{1}{\sqrt{2 \pi} \boldsymbol{\sigma}_{d,i}} \exp{\left\{-\frac{(x_d-\boldsymbol{\mu}_{d,i})^2}{2 \boldsymbol{\sigma}_{d,i}^2}\right\}}$$
-
-Posterior/Responsibility:
-$$ \pi_{i}(x_d|\mathbf{x}_{<d}) = \frac{\boldsymbol{\alpha}_{d,i} \phi_i(x_d| \mathbf{x}_{<d})}{\sum_{j=1}^K \boldsymbol{\alpha}_{d,j} \phi_j(x_d| \mathbf{x}_{<d})}$$
-
-Gradients with respect to the gaussian parameters:
-$$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{V}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \mathbf{h}$$
-
-$$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{b}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}}$$
-
-$$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{V}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \mathbf{h}$$
-
-$$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{b}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}}$$
-
-$$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{V}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \mathbf{h}$$
-
-$$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{b}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}}$$
-
-Gradient with respect to the hidden activations:
-
-$$\frac{\partial p(\mathbf{x})}{\partial \mathbf{h}_d} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{h}_{d}} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{h}_{d}} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{h}_{d}}$$
-
-$$\frac{\partial p(\mathbf{x})}{\partial \mathbf{h}_d} =  \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \mathbf{V}_{d}^{\alpha} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \mathbf{V}_{d}^{\mu} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \mathbf{V}_{d}^{\sigma} $$
-
-\newpage
-\section{RNN-RNADE fprop}
-
-$$p(x_{1}^{T}) = \prod_{1}^{T}p(x^{t}|\mathcal{A}^t) \: \text{where} \: \mathcal{A}^t \equiv \left\{x^{\tau}| \tau < t \right\}$$
-
-Maximum-likelihood Training: 
-
-$$ \log {p(x_{1}^{T})} = \sum_{1}^{T} \log{p(x^{t}|\mathcal{A}^t)}$$ 
-$$ \log {p(x_{1}^{T})} = \sum_{t=1}^{T} \sum_{d=1}^{D} \log p(x_d^t|\mathbf{x}_{<d}^t)$$
-$W'$ is the weight matrix from the reccurrent layer to the mixing coefficients. \\
-$W''$ is the weight matrix from the reccurrent layer to the means. \\
-$W'''$ is the weight matrix from the reccurrent layer to the sigmas. \\
-The rest of the architecture is similar to the RNN-RBM paper. 
-
-$$ \hat{h}^{(t)} = \sigma(W_2 \mathbf{x}^{t} + W_3 \hat{h}^{(t-1)} + b_{\hat h}) $$
-$$ r_{\alpha} = W^{\alpha} \hat{h}^{(t-1)}$$
-$$ r_{\mu} = W^{\mu} \hat{h}^{(t-1)}$$
-$$ r_{\sigma} = W^{\sigma} \hat{h}^{(t-1)}$$
 
 \begin{algorithm}
-\caption{RNN-RNADE fprop}\label{euclid}
+\caption{RNN-RNADE gradients}
 \begin{algorithmic}%[1]
-\Procedure{fprop}{}
-\State $a \gets c$
-\State $p \gets 1$
-\For{$t$ from $1$ to $T$}
+\For{$t$ from $T$ to $1$}
+\State $\mathbf{a} \gets \mathbf{c}$
 \For{$d$ from $1$ to $D$}
-\State $\mathbf{\psi_d} = \mathbf{\rho_d} \mathbf a$
-\State $\mathbf{h_d} = \text{sigm}(\mathbf{\psi_d})$
-\State $\mathbf{z}_{d}^{\alpha} = \mathbf{{V_{d}^{\alpha}}^{T}h_d} + \mathbf{b_{d}^{\alpha}} + \mathbf{r_{d}^{\alpha}} = \mathbf{{V_{d}^{\alpha}}^{T}h_d} + \mathbf{b_{d}^{\alpha}} + \mathbf{r_{d}^{\alpha}}$
-\State $\mathbf{z}_{d}^{\mu} = \mathbf{{V_{d}^{\mu}}^{T}h_d} + \mathbf{b_{d}^{\mu}} + \mathbf{r_{d}^{\mu}}$
-\State $\mathbf{z}_{d}^{\sigma} = \mathbf{{V_{d}^{\sigma}}^{T}h_d} + \mathbf{b_{d}^{\sigma}} + \mathbf{r_{d}^{\sigma}}$
-\State $\boldmath{\alpha_d} = \text{softmax}(\mathbf{z}_{d}^{\alpha})$
-\State $\boldmath{\mu_d} = \mathbf{z}_{d}^{\mu}$
-\State $\boldmath{\sigma_d} = \text{exp}(\mathbf{z}_{d}^{\sigma})$
-\State $p(\mathbf{x}) = p(\mathbf{x})p_{\mathcal{M}} (x_d;\boldmath{\alpha_d};\boldmath{\mu_d};\boldmath{\sigma_d})$
-\State $ \mathbf{a} = \mathbf{a} + x_d^{t}\mathbf{W.,}_{d}$
+	\State $\mathbf{a} \gets \mathbf{a} + x_{d}\mathbf{W}_{.,d} $
 \EndFor
+\For{$d$ from $D$ to $1$}
+\State $\boldsymbol{\psi}_{t} \gets \rho_{d} \mathbf a$
+\State $\mathbf{h}_{t} \gets \sigma(\boldsymbol{\psi}_t)$
+\State $\mathbf{z}^{\alpha}_{t} \gets {\mathbf{V}^{\alpha}_{d}}^{T}\mathbf{h}_t + \mathbf{b}^{\alpha}_{d(t)} $
+\State $\mathbf{z}^{\mu}_{t} \gets {\mathbf{V}^{\mu}_{d}}^{T}\mathbf{h}_t + \mathbf{b}^{\mu}_{d(t)} $
+\State $\mathbf{z}^{\sigma}_{t} \gets {\mathbf{V}^{\sigma}_{d}}^{T}\mathbf{h}_t + \mathbf{b}^{\sigma}_{d(t)} $
+\State $\boldsymbol{\alpha}_{t} \gets \text{softmax}(\mathbf{z}^{\alpha}_t)$
+\State $\boldsymbol{\mu}_{t} = \mathbf{z}^{\mu}_t$
+\State $\boldsymbol{\sigma}_{t} \gets \text{exp}(\mathbf{z}^{\sigma}_t)$
+\State $\boldsymbol{\phi}_{t} \gets \frac{1}{2} \frac{(\boldsymbol{\mu}_t-\mathbf{x}^{t}_d)^2}{\boldsymbol{\sigma}^2} - \log \boldsymbol{\sigma}_t - \frac{1}{2}\log(2\pi)$
+\State $\boldsymbol{\pi}_{t} \gets \frac{\boldsymbol{\alpha}_t\phi_t}{\sum_{j=1}^{K} \alpha_j \phi_j}$
+\State $\partial z^{\alpha}_{t} \gets \boldsymbol{\pi}_t - \boldsymbol{\alpha}_t$
+\State $\partial \boldsymbol{V}^{\alpha}_{d} \gets \partial z^{\alpha}_t \mathbf{h}_t$
+\State $\partial \mathbf{b}^{\alpha}_{d(t)} \gets \partial z^{\alpha}_t$
+\State $\partial z^{\mu}_{t} \gets \boldsymbol{\pi_t}(x_d - \boldsymbol{\mu}_t)/\boldsymbol{\sigma}_t^2$
+\State $\partial \boldsymbol{V}^{\mu}_{d} \gets \partial z^{\mu}_t \mathbf{h}_t$
+\State $\partial \mathbf{b}^{\mu}_{d(t)} \gets \partial z^{\mu}_t$
+\State $\partial z^{\sigma}_t \gets \boldsymbol{\pi}_t\left\{ (x_d - \boldsymbol{\mu}_t)/\boldsymbol{\sigma}^2_t -1\right\}$
+\State $\partial \boldsymbol{V}^{\sigma}_{d} \gets \partial z^{\sigma}_t \mathbf{h}_t$
+\State $\partial \mathbf{b}^{\sigma}_{d(t)} \gets \partial z^{\sigma}_t$
+\State $\partial \mathbf{h} \gets z^{\alpha}_t\boldsymbol{V}^{\alpha}_{d} + z^{\mu}_t\boldsymbol{V}^{\mu}_{d} + z^{\sigma}_t\boldsymbol{V}^{\sigma}_{d}$
+\State $\partial \boldsymbol{\phi}_t = \partial \mathbf{h}_t\sigma(\boldsymbol{\psi}_t)(1-\sigma(\boldsymbol{\psi}_t))$
+\State $\partial \rho_d(t) \gets \sum_{j} \partial \boldsymbol{\psi}_ja_j$
+\State $\partial \mathbf{a} \gets \partial \mathbf{a} + \partial \boldsymbol{\psi}_{\rho}$
+\State $\partial \mathbf{W}_{.,d} \gets \partial \mathbf{a}x_d$
+\If {$d=1$}
+	\State $\partial \mathbf{c} \gets \partial \mathbf{a}$
+\Else
+	\State $\mathbf{a} \gets \mathbf{a} - x^{t}_d \mathbf{W}_{.,d}$
+\EndIf
 \EndFor
-\EndProcedure
+\State $\partial W_{\alpha} \gets \partial W_{\alpha} + \partial \mathbf{b}^{\alpha}_{t}{\mathbf{h}^{t-1}}^T$
+\State $\partial W_{\mu} \gets \partial W_{\mu} + \partial \mathbf{b}^{\mu}_{t}{\mathbf{h}^{t-1}}^T$
+\State $\partial W_{\sigma} \gets \partial W_{\sigma} + \partial \mathbf{b}^{\sigma}_{t}{\mathbf{h}^{t-1}}^T$
+\State $\partial \mathbf{h}^{t} \gets W_{rec}\partial  \mathbf{h}^{t+1}\mathbf{h}^{t+1}(1-\mathbf{h}^{t+1}) + W_{\alpha} \partial \mathbf{b}^{\alpha}_{t+1} + W_{\mu} \partial \mathbf{b}^{\mu}_{t+1} + W_{\sigma} \partial \mathbf{b}^{\sigma}_{t+1}$
+\State $\partial \mathbf{b}_h \gets \partial \mathbf{b}_h + \partial \mathbf{h}^{t} \mathbf{h}^{t} (1-\mathbf{h}^{t})$
+\State $\partial W_{rec} \gets \partial W_{rec} + \partial \mathbf{h}^{t} \mathbf{h}^{t} (1-\mathbf{h}^{t}){\mathbf{h}^{t-1}}^T$
+\State $\partial W_{in} \gets \partial W_{in} + \partial \mathbf{h}^{t} \mathbf{h}^{t} (1-\mathbf{h}^{t})\mathbf{x}_t^T$
+\EndFor
 \end{algorithmic}
 \end{algorithm}
 
-Gradients for the RNN-RNADE:
+% Gradients for the RNADE:
 
-$$ \phi_i(x_d| \mathbf{x}_{<d}) = \frac{1}{\sqrt{2 \pi} \boldsymbol{\sigma}_{d,i}} \exp{\left\{-\frac{(x_d-\boldsymbol{\mu}_{d,i})^2}{2 \boldsymbol{\sigma}_{d,i}^2}\right\}}$$
+% $$ \phi_i(x_d| \mathbf{x}_{<d}) = \frac{1}{\sqrt{2 \pi} \boldsymbol{\sigma}_{d,i}} \exp{\left\{-\frac{(x_d-\boldsymbol{\mu}_{d,i})^2}{2 \boldsymbol{\sigma}_{d,i}^2}\right\}}$$
 
-Posterior/Responsibility:
-$$ \pi_{i}(x_d|\mathbf{x}_{<d}) = \frac{\boldsymbol{\alpha}_{d,i} \phi_i(x_d| \mathbf{x}_{<d})}{\sum_{j=1}^K \boldsymbol{\alpha}_{d,j} \phi_j(x_d| \mathbf{x}_{<d})}$$
+% Posterior/Responsibility:
+% $$ \pi_{i}(x_d|\mathbf{x}_{<d}) = \frac{\boldsymbol{\alpha}_{d,i} \phi_i(x_d| \mathbf{x}_{<d})}{\sum_{j=1}^K \boldsymbol{\alpha}_{d,j} \phi_j(x_d| \mathbf{x}_{<d})}$$
 
-Gradients with respect to the gaussian parameters:
-$$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{V}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \mathbf{h}$$
+% Gradients with respect to the gaussian parameters:
+% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{V}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \mathbf{h}$$
 
-$$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{b}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}}$$
+% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{b}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}}$$
+
+% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{V}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \mathbf{h}$$
+
+% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{b}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}}$$
+
+% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{V}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \mathbf{h}$$
+
+% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{b}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}}$$
+
+% Gradient with respect to the hidden activations:
+
+% $$\frac{\partial p(\mathbf{x})}{\partial \mathbf{h}_d} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{h}_{d}} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{h}_{d}} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{h}_{d}}$$
+
+% $$\frac{\partial p(\mathbf{x})}{\partial \mathbf{h}_d} =  \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \mathbf{V}_{d}^{\alpha} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \mathbf{V}_{d}^{\mu} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \mathbf{V}_{d}^{\sigma} $$
+
+% \newpage
+% \section{RNN-RNADE fprop}
+
+% $$p(x_{1}^{T}) = \prod_{1}^{T}p(x^{t}|\mathcal{A}^t) \: \text{where} \: \mathcal{A}^t \equiv \left\{x^{\tau}| \tau < t \right\}$$
+
+% Maximum-likelihood Training: 
+
+% $$ \log {p(x_{1}^{T})} = \sum_{1}^{T} \log{p(x^{t}|\mathcal{A}^t)}$$ 
+% $$ \log {p(x_{1}^{T})} = \sum_{t=1}^{T} \sum_{d=1}^{D} \log p(x_d^t|\mathbf{x}_{<d}^t)$$
+% $W'$ is the weight matrix from the reccurrent layer to the mixing coefficients. \\
+% $W''$ is the weight matrix from the reccurrent layer to the means. \\
+% $W'''$ is the weight matrix from the reccurrent layer to the sigmas. \\
+% The rest of the architecture is similar to the RNN-RBM paper. 
+
+% $$ \hat{h}^{(t)} = \sigma(W_2 \mathbf{x}^{t} + W_3 \hat{h}^{(t-1)} + b_{\hat h}) $$
+% $$ r_{\alpha} = W^{\alpha} \hat{h}^{(t-1)}$$
+% $$ r_{\mu} = W^{\mu} \hat{h}^{(t-1)}$$
+% $$ r_{\sigma} = W^{\sigma} \hat{h}^{(t-1)}$$
+
+% \begin{algorithm}
+% \caption{RNN-RNADE fprop}\label{euclid}
+% \begin{algorithmic}%[1]
+% \Procedure{fprop}{}
+% \State $a \gets c$
+% \State $p \gets 1$
+% \For{$t$ from $1$ to $T$}
+% \For{$d$ from $1$ to $D$}
+% \State $\mathbf{\psi_d} = \mathbf{\rho_d} \mathbf a$
+% \State $\mathbf{h_d} = \text{sigm}(\mathbf{\psi_d})$
+% \State $\mathbf{z}_{d}^{\alpha} = \mathbf{{V_{d}^{\alpha}}^{T}h_d} + \mathbf{b_{d}^{\alpha}} + \mathbf{r_{d}^{\alpha}} = \mathbf{{V_{d}^{\alpha}}^{T}h_d} + \mathbf{b_{d}^{\alpha}} + \mathbf{r_{d}^{\alpha}}$
+% \State $\mathbf{z}_{d}^{\mu} = \mathbf{{V_{d}^{\mu}}^{T}h_d} + \mathbf{b_{d}^{\mu}} + \mathbf{r_{d}^{\mu}}$
+% \State $\mathbf{z}_{d}^{\sigma} = \mathbf{{V_{d}^{\sigma}}^{T}h_d} + \mathbf{b_{d}^{\sigma}} + \mathbf{r_{d}^{\sigma}}$
+% \State $\boldmath{\alpha_d} = \text{softmax}(\mathbf{z}_{d}^{\alpha})$
+% \State $\boldmath{\mu_d} = \mathbf{z}_{d}^{\mu}$
+% \State $\boldmath{\sigma_d} = \text{exp}(\mathbf{z}_{d}^{\sigma})$
+% \State $p(\mathbf{x}) = p(\mathbf{x})p_{\mathcal{M}} (x_d;\boldmath{\alpha_d};\boldmath{\mu_d};\boldmath{\sigma_d})$
+% \State $ \mathbf{a} = \mathbf{a} + x_d^{t}\mathbf{W.,}_{d}$
+% \EndFor
+% \EndFor
+% \EndProcedure
+% \end{algorithmic}
+% \end{algorithm}
+
+% Gradients for the RNN-RNADE:
+
+% $$ \phi_i(x_d| \mathbf{x}_{<d}) = \frac{1}{\sqrt{2 \pi} \boldsymbol{\sigma}_{d,i}} \exp{\left\{-\frac{(x_d-\boldsymbol{\mu}_{d,i})^2}{2 \boldsymbol{\sigma}_{d,i}^2}\right\}}$$
+
+% Posterior/Responsibility:
+% $$ \pi_{i}(x_d|\mathbf{x}_{<d}) = \frac{\boldsymbol{\alpha}_{d,i} \phi_i(x_d| \mathbf{x}_{<d})}{\sum_{j=1}^K \boldsymbol{\alpha}_{d,j} \phi_j(x_d| \mathbf{x}_{<d})}$$
+
+% Gradients with respect to the gaussian parameters:
+% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{V}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \mathbf{h}$$
+
+% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{b}_{d}^{\alpha}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}}$$
 
 
 
-$$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{V}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \mathbf{h}$$
+% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{V}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \mathbf{h}$$
 
-$$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{b}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}}$$
+% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{b}_{d}^{\mu}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}}$$
 
-$$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{V}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \mathbf{h}$$
+% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{V}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{V}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \mathbf{h}$$
 
-$$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{b}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}}$$
+% $$ \frac{\partial p(\mathbf{x})}{\partial \mathbf{b}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{b}_{d}^{\sigma}} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}}$$
 
-Gradient with respect to the hidden activations:
+% Gradient with respect to the hidden activations:
 
-$$\frac{\partial p(\mathbf{x})}{\partial \mathbf{h}_d} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{h}_{d}} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{h}_{d}} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{h}_{d}}$$
+% $$\frac{\partial p(\mathbf{x})}{\partial \mathbf{h}_d} = \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \frac{\partial \mathbf{z}_{d,i}^{\alpha}}{\partial \mathbf{h}_{d}} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \frac{\partial \mathbf{z}_{d,i}^{\mu}}{\partial \mathbf{h}_{d}} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \frac{\partial \mathbf{z}_{d,i}^{\sigma}}{\partial \mathbf{h}_{d}}$$
 
-$$\frac{\partial p(\mathbf{x})}{\partial \mathbf{h}_d} =  \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \mathbf{V}_{d}^{\alpha} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \mathbf{V}_{d}^{\mu} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \mathbf{V}_{d}^{\sigma} $$
+% $$\frac{\partial p(\mathbf{x})}{\partial \mathbf{h}_d} =  \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\alpha}} \mathbf{V}_{d}^{\alpha} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\mu}} \mathbf{V}_{d}^{\mu} + \frac{\partial p(\mathbf{x})}{\partial \mathbf{z}_{d,i}^{\sigma}} \mathbf{V}_{d}^{\sigma} $$
 
 
 \end{document}
